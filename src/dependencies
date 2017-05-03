@@ -1,0 +1,4 @@
+fsrun.o: fsrun.cc
+mpradio.o: mpradio.cc fsrun.h player.h settings_provider.h
+player.o: player.cc datastruct.h
+settings_provider.o: settings_provider.cc datastruct.h
