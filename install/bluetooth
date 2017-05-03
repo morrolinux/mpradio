@@ -1,0 +1,42 @@
+#!/bin/bash
+#
+#THIS SCRIPT IS A CUSTOMIZATION FORM http://www.instructables.com/id/Turn-your-Raspberry-Pi-into-a-Portable-Bluetooth-A/?ALLSTEPS
+#
+
+echo "Executing bluetooth script...|$ACTION|" >> /var/log/bluetooth_dev
+
+ACTION=$(expr "$ACTION" : "\([a-zA-Z]\+\).*")
+
+if [ "$ACTION" = "add" ]
+then
+
+echo "BT connected" >> /var/log/bluetooth_dev
+
+for dev in $(find /sys/devices/virtual/input/ -name input*)
+do
+   if [ -f "$dev/name" ]
+   then
+      mac=$(cat "$dev/name" | sed 's/:/_/g')
+      bluez_dev=bluez_source.$mac
+
+      echo "BT $bluez_dev" >> /var/log/bluetooth_dev
+      sleep 1
+
+      #CONFIRM=$(sudo -u pi pactl list short | grep $bluez_dev)
+      CONFIRM=$(/bin/su pi -c "pactl list short")
+      if [[ $(echo $CONFIRM) != "" ]]
+      then
+        echo "Setting bluez_source to:  $bluez_dev" >> /var/log/bluetooth_dev
+	systemctl stop mpradio
+        /home/pi/mpradio $bluez_dev
+      fi
+   fi
+done
+fi
+
+if [ "$ACTION" = "remove" ]
+then
+
+systemctl start mpradio
+
+fi
