@@ -1,3 +1,16 @@
+/**
+ * \mainpage mpradio
+ *
+ * mpradio implements PiFmRDS, please check out their github and license.
+ *
+ * @author Moreno Razzoli
+ */
+
+/**
+ * @file 
+ * mpradio main
+ */
+
 #include <iostream>
 using namespace std;
 
@@ -5,9 +18,13 @@ using namespace std;
 #include "player.h"
 #include "settings_provider.h"
 
-/** /bin/su pi -c "parec -d $BT_DEVICE|sox -t raw -v 2.5 -G -b 16 -e signed -c 2 -r 44100 - -t wav - | sudo /home/pi/PiFmRds/src/pi_fm_rds -ps 'BLUETOOTH' -rt 'A2DP BLUETOOTH' -freq $FREQ -audio -"
+/**
+ * the main() checks wheather an arument is passed or not
+ * if an argument is passed, that is intended to be the 
+ * bluetooth device to stream from. 
+ * if no parameter is passed, mpradio will play mp3s 
+ * from the folder specified in settings ( using ::getsettings )
 */
-
 int main(int argc, char* argv[])
 {
 	need2recompile();
