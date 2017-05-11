@@ -33,7 +33,7 @@ make
 cp mpradio /home/pi/
 
 #Installing service units...
-cp mpradio.service /etc/systemd/system/mpradio.service
+cp ../install/mpradio.service /etc/systemd/system/mpradio.service
 systemctl enable mpradio.service
 
 #Installing PiFmRDS...
