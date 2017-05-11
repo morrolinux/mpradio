@@ -12,14 +12,23 @@ apt-get -y install bluez pulseaudio-module-bluetooth python-gobject python-gobje
 apt-get -y install git libsndfile1-dev
 
 #Setting rules...
-echo "blacklist snd_bcm2835" >> /etc/modprobe.d/blacklist.conf
-echo "blacklist ipv6" >> /etc/modprobe.d/blacklist.conf
-echo "KERNEL==\"input[0-9]*\", RUN+=\"/usr/lib/udev/bluetooth\"" >> /etc/udev/rules.d/99-input.rules
+if [[ $(grep "blacklist snd_bcm2835" /etc/modprobe.d/blacklist.conf) == "" ]] then
+        echo "blacklist snd_bcm2835" >> /etc/modprobe.d/blacklist.conf
+        echo "blacklist ipv6" >> /etc/modprobe.d/blacklist.conf
+fi
+
+if [[ $(grep "bluetooth" /etc/modprobe.d/blacklist.conf) == "" ]] then
+        echo "KERNEL==\"input[0-9]*\", RUN+=\"/usr/lib/udev/bluetooth\"" >> /etc/udev/rules.d/99-input.rules
+fi
 
 #Installing needed files and configurations
 cp bluezutils.py /bin/bluezutils.py
 cp simple-agent /bin/simple-agent
-echo "@reboot root /bin/simple-agent&" >> /etc/crontab
+
+if [[ $(grep "simple-agent" /etc/crontab) == "" ]] then
+        echo "@reboot root /bin/simple-agent&" >> /etc/crontab
+fi
+
 cp daemon.conf /etc/pulse/daemon.conf
 mkdir /usr/lib/udev
 cp bluetooth /usr/lib/udev/bluetooth
@@ -44,8 +53,9 @@ make clean
 make
 
 #Final configuration and perms...
-echo "/dev/sda1    /pirateradio    vfat    defaults,ro,nofail 0   0" >> /etc/fstab
-usermod -a -G lp pi
+if [[ $(grep "pirateradio" /etc/fstab) == "" ]] then
+        echo "/dev/sda1    /pirateradio    vfat    defaults,ro,nofail 0   0" >> /etc/fstab
+fi
 
 echo "Installation completed! Rebooting in 10 seconds..."
 sleep 10 && reboot
