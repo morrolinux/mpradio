@@ -87,7 +87,7 @@ int play_storage()
 			size_t found = songpath.find_last_of("/");	/**< extract song name out of the absolute file path */
 	  		string songname=songpath.substr(found+1);
 	
-			string cmdline=sox+" "+songpath+" "+sox_params+" | "+\
+			string cmdline=sox+" "+"\""+songpath+"\""+" "+sox_params+" | "+\
 				pifm1+" "+songname+" "+pifm2+" "+songname+" "+pifm3+" "+s.freq;
 	
 			system(cmdline.c_str());
