@@ -41,7 +41,7 @@ void get_list()
 	char line[line_size];
 	string result;
 
-        string cmd = "find " + s.storage + " -iname *." + s.format;
+        string cmd = "find " + s.storage + " -not -path \'*/\\.*\' -iname *." + s.format;
 	fp = popen(cmd.c_str(), "r");
 
 	while (fgets(line, line_size, fp))
@@ -61,7 +61,7 @@ int play_storage()
 		init();
 		legacy_rds_init();
 	
-		string sox="sox -t mp3 -v 1.5 -r 48000 -G";
+		string sox="sox -t mp3 -v 1.3 -r 48000 -G";
 		string sox_params="-t wav -";
 		string pifm1="/home/pi/PiFmRds/src/pi_fm_rds -ctl /home/pi/rds_ctl -ps";
 		string pifm2="-rt";
@@ -82,7 +82,7 @@ int play_storage()
 	  		string songname=songpath.substr(found+1);
 	
 			string cmdline=sox+" "+"\""+songpath+"\""+" "+sox_params+" | "+\
-				pifm1+" "+songname+" "+pifm2+" "+songname+" "+pifm3+" "+s.freq;
+				pifm1+" "+"\""+songname+"\""+" "+pifm2+" "+"\""+songname+"\""+" "+pifm3+" "+s.freq;
 	
 			system(cmdline.c_str());
 		}
@@ -94,7 +94,7 @@ int play_bt(string device)
 {
 	
 	string s0="/bin/su pi -c \"parec -d";
-	string s1="sox -t raw -v 1.5 -G -b 16 -e signed -c 2 -r 44100 - -t wav - | sudo /home/pi/PiFmRds/src/pi_fm_rds -ps 'BLUETOOTH' -rt 'A2DP BLUETOOTH' -freq";
+	string s1="sox -t raw -v 1.3 -G -b 16 -e signed -c 2 -r 44100 - -t wav - | sudo /home/pi/PiFmRds/src/pi_fm_rds -ps 'BLUETOOTH' -rt 'A2DP BLUETOOTH' -freq";
 	string s2="-audio -\"";
 	string cmdline=s0+" "+device+" | "+s1+" "+s.freq+" "+s2;
 
