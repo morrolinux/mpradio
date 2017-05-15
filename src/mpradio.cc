@@ -19,7 +19,7 @@ using namespace std;
 #include "settings_provider.h"
 
 /**
- * the main() checks wheather an arument is passed or not
+ * the main() checks whether an argument is passed or not
  * if an argument is passed, that is intended to be the 
  * bluetooth device to stream from. 
  * if no parameter is passed, mpradio will play mp3s 
