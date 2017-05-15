@@ -1,5 +1,5 @@
 /** 
- * player routine for mutlimedia files on storage.
+ * player routine for multimedia files on storage.
  * calls ::getsettings to fetch the needed settings and starts to play 
  */
 int play_storage();
