@@ -11,12 +11,11 @@ extern settings s;
 list<string> pqueue;
 list<string>::iterator it;
 
-bool legacy_rds_init()
+void legacy_rds_init()
 {
 	system("rm -f /home/pi/rds_ctl");
 	system("/usr/bin/mkfifo /home/pi/rds_ctl");
 	system("chmod 777 /home/pi/rds_ctl");
-	return true;
 }
 
 /** 
@@ -24,16 +23,14 @@ bool legacy_rds_init()
  * this function needs to be launched only once.
  */
 
-bool init()
+void init()
 {
 	system("/bin/su pi -c \"pulseaudio -D\"");
 	system("hciconfig hci0 piscan");
-	//legacy_rds_init();
-	return true;
 }
 
 /**
- * creates a file list each time is launched 
+ * creates a file list each time it is launched 
  * and saves the elements in pqueue (play queue)
  */
 
@@ -45,12 +42,13 @@ void get_list()
 	string result;
 
 
-	string s0="find ";
-	string s1=s.storage; 
-	string s2="-iname *.";
-	string s3=s.format;
-	string cmd=s0+" "+s1+" "+s2+s3;
-        fp = popen(cmd.c_str(), "r");
+	/*string s0="find ";
+	*string s1=s.storage; 
+	*string s2="-iname *.";
+	*string s3=s.format;
+	*string cmd=s0+" "+s1+" "+s2+s3;*/
+        string cmd = "find " + s.storage + " -iname *." + s.format;
+	fp = popen(cmd.c_str(), "r");
 
 	while (fgets(line, line_size, fp))
 		pqueue.push_back(line);
