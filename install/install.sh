@@ -13,11 +13,11 @@ fi
 
 if [[ $remove ]] ; then 
 	INSTALL="remove"
-	CP="rm"
+	CP="rm -f"
 	systemctl stop mpradio
 else
 	INSTALL="install"
-	CP="cp"
+	CP="cp -f"
 fi
 
 #Installing software dependencies...
@@ -62,7 +62,7 @@ else
 	fi
 fi
 
-cp daemon.conf /etc/pulse/daemon.conf
+cp -f daemon.conf /etc/pulse/daemon.conf
 mkdir /usr/lib/udev
 ${CP} bluetooth /usr/lib/udev/bluetooth
 ${CP} audio.conf /etc/bluetooth/audio.conf
@@ -80,7 +80,7 @@ fi
 ${CP} mpradio /home/pi/mpradio
 
 #Installing service units...
-cp ../install/mpradio.service /etc/systemd/system/mpradio.service
+cp -f ../install/mpradio.service /etc/systemd/system/mpradio.service
 if [[ $remove ]]; then
 	systemctl disable mpradio.service
 else
