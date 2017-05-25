@@ -32,6 +32,7 @@ string read(string section,string key)
 	if(result == ""){
 		cout<<"no frequency has been set. setting to default..."<<endl;
 		result=DEFAULTFREQ;
+		result.append(" ");
 	}
 	return result;
 }
