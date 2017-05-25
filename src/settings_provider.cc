@@ -29,17 +29,18 @@ string read(string section,string key)
 	pclose(fp);
 	string result=tmp;
 	delete [] tmp;
-	if(result == ""){
-		cout<<"no frequency has been set. setting to default..."<<endl;
-		result=DEFAULTFREQ;
-	}
 	return result;
 }
 
 void getsettings()
 {
 	s.freq=read("pirateradio","frequency");
-	s.freq.erase(s.freq.size()-1);
+        if(s.freq== ""){
+                cout<<"no frequency has been set. setting to default..."<<endl;
+                s.freq=DEFAULTFREQ;
+        }else{
+                s.freq.erase(s.freq.size()-1);
+        }
 	cout<<s.freq<<endl;
 
 	s.storage=STORAGE;
@@ -47,4 +48,3 @@ void getsettings()
 
 	s.format="mp3";
 }
-
