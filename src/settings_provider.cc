@@ -10,6 +10,7 @@ using namespace std;
 #define STORAGE "/pirateradio"
 #define SETTINGS "/pirateradio/pirateradio.config"
 #define DEFAULTFREQ "88.8"
+#define DEFAULTSNAME "MPRADIO"
 #define STRLEN 40
 
 settings s;
@@ -42,6 +43,15 @@ void getsettings()
                 s.freq.erase(s.freq.size()-1);
         }
 	cout<<s.freq<<endl;
+
+        s.sname=read("pirateradio","stationname");
+        if(s.sname== ""){
+                cout<<"no stationname has been set. setting to default..."<<endl;
+                s.sname=DEFAULTSNAME;
+        }else{
+                s.sname.erase(s.sname.size()-1);
+        }
+        cout<<s.sname<<endl;
 
 	s.storage=STORAGE;
 	cout<<s.storage<<endl;
