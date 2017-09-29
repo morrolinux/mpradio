@@ -17,7 +17,7 @@ do
    if [ -f "$dev/name" ]
    then
       mac=$(cat "$dev/name" | sed 's/:/_/g')
-      bluez_dev=bluez_source.$mac
+      bluez_dev=bluez_source.${mac}.a2dp_source
 
       echo "BT $bluez_dev" >> /var/log/bluetooth_dev
       sleep 1
