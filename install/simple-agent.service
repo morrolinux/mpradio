@@ -1,0 +1,13 @@
+[Unit]
+Description=simple-agent service
+After=network.target auditd.service
+
+[Service]
+Type=simple
+EnvironmentFile=/root/.profile
+ExecStart=/bin/bash -l -c '/bin/simple-agent'
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=control-group
+
+[Install]
+WantedBy=multi-user.target
