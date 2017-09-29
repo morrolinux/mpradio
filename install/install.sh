@@ -5,6 +5,11 @@ if [ "$(id -u)" != "0" ]; then
    exit 1
 fi
 
+if [ "$(pwd)" == "/home/pi" ]; then
+   echo "Please move mpradio folder outside your /home/pi directory.\n /home/pi/mpradio-master is fine."
+   exit 1
+fi
+
 if [[ $1 == "remove" ]] ; then 
 	remove="all"
 else 
