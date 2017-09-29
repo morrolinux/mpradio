@@ -52,16 +52,6 @@ fi
 ${CP} bluezutils.py /bin/bluezutils.py
 ${CP} simple-agent /bin/simple-agent
 
-CRONTAB="/etc/crontab"
-crontabline=$(grep "simple-agent" $CRONTAB -n|cut -d: -f1)
-if [[ $crontabline == "" ]]; then
-	echo "@reboot root /bin/simple-agent&" >> $CRONTAB
-else
-	if [[ $remove ]]; then
-		sed -i.bak -e "${crontabline}d" $CRONTAB
-	fi
-fi
-
 cp -f daemon.conf /etc/pulse/daemon.conf
 mkdir /usr/lib/udev
 ${CP} bluetooth /usr/lib/udev/bluetooth
@@ -81,10 +71,13 @@ ${CP} mpradio /home/pi/mpradio
 
 #Installing service units...
 cp -f ../install/mpradio.service /etc/systemd/system/mpradio.service
+cp -f ../install/simple-agent.service /etc/systemd/system/simple-agent.service
 if [[ $remove ]]; then
 	systemctl disable mpradio.service
+	systemctl disable simple-agent.service
 else
 	systemctl enable mpradio.service
+	systemctl enable simple-agent.service
 fi
 
 #Installing PiFmRDS...
