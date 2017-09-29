@@ -26,7 +26,7 @@ void legacy_rds_init()
 void init()
 {
 	system("/usr/bin/sudo -u pi -s pulseaudio -D");
-	system("hciconfig hci0 piscan");
+	system("hciconfig hci0 up && hciconfig hci0 piscan");
 }
 
 /**
