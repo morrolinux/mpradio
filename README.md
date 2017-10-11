@@ -7,14 +7,33 @@ Exclusively tested on Raspbian (ARM)
 - The first bluetooth connection after boot is known to fail after few seconds. All subsequent connections will work just fine.
 
 # installation
-git clone https://github.com/morrolinux/mpradio.git mpradio-master
+` git clone https://github.com/morrolinux/mpradio.git mpradio-master `
 
-cd mpradio-master/install
+` cd mpradio-master/install `
 
-sudo ./install.sh
+` sudo ./install.sh `
 
 # update 
 same as installation
 
 # uninstallation / removal
-install.sh remove 
+` install.sh remove `
+
+# Debugging / Troubleshooting
+mpradio is launched as a service (via systemd) after boot completed
+
+check whether the service is running or not: 
+
+` $ sudo systemctl status mpradio `
+
+start or stop the service:
+
+` $ sudo systemctl [start/stop] mpradio `
+
+As for Bluetooth:
+
+Bluetooth connection logs are under ` /var/log/bluetooth_dev `
+
+if you are having issues with bluetooth audio pairing, please also check if simple-agent service is running:
+
+` $ sudo systemctl status simple-agent `
