@@ -51,6 +51,7 @@ fi
 #Installing needed files and configurations
 ${CP} bluezutils.py /bin/bluezutils.py
 ${CP} simple-agent /bin/simple-agent
+mkdir /pirateradio
 
 cp -f daemon.conf /etc/pulse/daemon.conf
 mkdir /usr/lib/udev
