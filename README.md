@@ -19,7 +19,7 @@ However, you can change the FM streaming frequency (which is otherwise defaulted
 
 pirateradio.config example:
 ```
-[pirateradio]
+[PIRATERADIO]
 frequency=105.3
 ```
 
