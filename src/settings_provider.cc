@@ -22,7 +22,7 @@ inline bool exists_test (const std::string& name) {
 /** fetch the key:value pair for the query section/key passed by argument */
 string read(string section,string key)
 {
-	if(! exists_test0(SETTINGS) ) return "";
+	if(! exists_test(SETTINGS) ) return "";
 	
 	char * tmp= new char[STRLEN];
 	FILE *fp;
