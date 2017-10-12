@@ -24,7 +24,10 @@ frequency=105.3
 ```
 
 # update 
-same as installation
+` rm -rf mpradio-master/ ` 
+and then:
+
+installation steps
 
 # uninstallation / removal
 ` install.sh remove `
