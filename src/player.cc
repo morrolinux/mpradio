@@ -53,7 +53,9 @@ void get_list()
 
 int play_storage()
 {
-	while(true){
+	bool repeat = true;
+	
+	while(repeat){
 		get_list();		/**< generate a file list */
 		int next;
 		int qsize=pqueue.size();
@@ -68,7 +70,9 @@ int play_storage()
 		string pifm2="-rt";
 		string pifm3="-audio - -freq";
 		string songpath;
-	
+		
+		if(qsize <= 0) repeat=false;
+		
 		while(qsize > 0)
 		{
 			next=rand() % qsize;		/**< extract a random file from the list */
