@@ -14,9 +14,16 @@ using namespace std;
 
 settings s;
 
+inline bool exists_test (const std::string& name) {
+    ifstream f(name.c_str());
+    return f.good();
+}
+
 /** fetch the key:value pair for the query section/key passed by argument */
 string read(string section,string key)
 {
+	if(! exists_test0(SETTINGS) ) return "";
+	
 	char * tmp= new char[STRLEN];
 	FILE *fp;
 	string s0="crudini --get";
