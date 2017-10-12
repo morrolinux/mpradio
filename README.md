@@ -18,10 +18,10 @@ By default, mpradio will always be running automatically after boot once install
 However, you can change the FM streaming frequency (which is otherwise defaulted to 88.8) by placing a file named pirateradio.config in the root of a USB key (which of course, will need to stay plugged for the settings to be permanent)
 
 pirateradio.config example:
-`
+```
 [pirateradio]
 frequency=105.3
-`
+```
 
 # update 
 same as installation
