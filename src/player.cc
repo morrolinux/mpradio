@@ -25,6 +25,7 @@ void legacy_rds_init()
 
 void init()
 {
+	system("sudo killall pulseaudio");
 	system("/usr/bin/sudo -u pi -s pulseaudio -D");
 	system("systemctl force-reload udev systemd-udevd-control.socket systemd-udevd-kernel.socket");
 	system("hciconfig hci0 up && hciconfig hci0 piscan");
