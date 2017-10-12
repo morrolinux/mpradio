@@ -41,7 +41,7 @@ string read(string section,string key)
 
 void getsettings()
 {
-	s.freq=read("pirateradio","frequency");
+	s.freq=read("PIRATERADIO","frequency");
         if(s.freq== ""){
                 cout<<"no frequency has been set. setting to default..."<<endl;
                 s.freq=DEFAULTFREQ;
