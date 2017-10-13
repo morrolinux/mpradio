@@ -50,3 +50,6 @@ Bluetooth connection logs are under ` /var/log/bluetooth_dev `
 if you are having issues with bluetooth audio pairing, please also check if simple-agent service is running:
 
 ` $ sudo systemctl status simple-agent `
+
+A simple schematic of how things work together:
+![Alt text](/doc/mpradio_schematic.png?raw=true "mpradio schematic")
