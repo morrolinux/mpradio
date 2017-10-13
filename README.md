@@ -1,7 +1,7 @@
 # mpradio
-Morrolinux's Pirate radio (PiFmRDS implementation with bluetooth and mp3 support)
+Morrolinux's Pirate radio (PiFmRDS implementation with Bluetooth and mp3 support) for all Raspberry Pi models
 
-Exclusively tested on Raspbian (ARM)
+Exclusively tested on Minimal Raspbian (ARM)
 
 # Known issues
 - The first bluetooth connection after boot is known to fail after few seconds. All subsequent connections will work just fine.
