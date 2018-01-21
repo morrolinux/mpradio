@@ -21,7 +21,7 @@ else
 fi
 
 #Installing software dependencies...
-apt-get -y $INSTALL bluez pulseaudio-module-bluetooth python-gobject python-gobject-2 bluez-tools sox crudini libsox-fmt-mp3 python-dbus
+apt-get -y $INSTALL bluez pi-bluetooth pulseaudio-module-bluetooth python-gobject python-gobject-2 bluez-tools sox crudini libsox-fmt-mp3 python-dbus
 
 #Installing software needed to compile PiFmRDS..
 apt-get -y $INSTALL git libsndfile1-dev
