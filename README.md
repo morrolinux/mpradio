@@ -30,7 +30,7 @@ and then:
 installation steps
 
 # uninstallation / removal
-` install.sh remove `
+` ./install.sh remove `
 
 # Debugging / Troubleshooting
 mpradio is launched as a service (via systemd) after boot completed
