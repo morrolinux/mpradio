@@ -51,6 +51,7 @@ fi
 
 #Installing needed files and configurations
 ${CP} bluezutils.py /bin/bluezutils.py
+${CP} bt-setup.sh /bin/bt-setup.sh
 ${CP} simple-agent /bin/simple-agent
 mkdir /pirateradio
 cp -f ../install/pirateradio.config /pirateradio/pirateradio.config
@@ -75,16 +76,19 @@ fi
 ${CP} mpradio /home/pi/mpradio
 
 #Installing service units...
+cp -f ../install/bt-setup.service /etc/systemd/system/bt-setup.service
 cp -f ../install/mpradio.service /etc/systemd/system/mpradio.service
 cp -f ../install/simple-agent.service /etc/systemd/system/simple-agent.service
 if [[ $remove ]]; then
 	systemctl disable mpradio.service
-	systemctl disable bluealsa
+	systemctl disable bluealsa.service
 	systemctl disable simple-agent.service
+	systemctl disable bt-setup.service
 else
 	systemctl enable mpradio.service
-	systemctl enable bluealsa
+	systemctl enable bluealsa.service
 	systemctl enable simple-agent.service
+	systemctl enable bt-setup.service
 fi
 
 #Installing PiFmRDS...
