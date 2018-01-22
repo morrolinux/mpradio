@@ -1,0 +1,12 @@
+[Unit]
+Description=mpradio bluetooth init script
+Requires=bluetooth.service bluealsa.service
+
+[Service]
+Type=simple
+User=root
+Group=root
+ExecStart=/bin/bash /bin/bt-setup.sh
+
+[Install]
+WantedBy=multi-user.target
