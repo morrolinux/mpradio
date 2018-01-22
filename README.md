@@ -51,6 +51,10 @@ if you are having issues with bluetooth audio pairing, please also check if simp
 
 ` $ sudo systemctl status simple-agent `
 
+if you are having issues with bluetooth not connecting once it's paired, please check weather bluealsa is running or not:
+
+` $ sudo systemctl status bluealsa `
+
 
 A simple schematic of how things work together:
 
