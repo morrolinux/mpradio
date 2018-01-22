@@ -99,10 +99,12 @@ int play_storage()
 int play_bt(string device)
 {
 	
-	string s0="/bin/su pi -c \"parec -d";
-	string s1="sox -t raw -v 1.3 -G -b 16 -e signed -c 2 -r 44100 - -t wav - | sudo /home/pi/PiFmRds/src/pi_fm_rds -ps 'BLUETOOTH' -rt 'A2DP BLUETOOTH' -freq";
-	string s2="-audio -\"";
-	string cmdline=s0+" "+device+" | "+s1+" "+s.freq+" "+s2;
+	//string s0="/bin/su pi -c \"parec -d";
+	//string s1="sox -t raw -v 1.3 -G -b 16 -e signed -c 2 -r 44100 - -t wav - | sudo /home/pi/PiFmRds/src/pi_fm_rds -ps 'BLUETOOTH' -rt 'A2DP BLUETOOTH' -freq";
+	//string s2="-audio -\"";
+	//string cmdline=s0+" "+device+" | "+s1+" "+s.freq+" "+s2;
+	
+	string cmdline="arecord -D bluealsa -f cd -c 2 | sox -t raw -v 1.3 -G -b 16 -e signed -c 2 -r 44100 - -t wav - | sudo /home/pi/PiFmRds/src/pi_fm_rds -ps 'BLUETOOTH' -rt 'A2DP BLUETOOTH' -freq 88.8 -audio -";
 
 	system(cmdline.c_str());
 

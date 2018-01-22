@@ -21,7 +21,8 @@ else
 fi
 
 #Installing software dependencies...
-apt-get -y $INSTALL bluez pi-bluetooth pulseaudio-module-bluetooth python-gobject python-gobject-2 bluez-tools sox crudini libsox-fmt-mp3 python-dbus
+apt-get -y $INSTALL bluez pi-bluetooth python-gobject python-gobject-2 bluez-tools sox crudini libsox-fmt-mp3 python-dbus bluealsa
+apt-get -y remove pulseaudio
 
 #Installing software needed to compile PiFmRDS..
 apt-get -y $INSTALL git libsndfile1-dev
@@ -59,6 +60,8 @@ mkdir /usr/lib/udev
 ${CP} bluetooth /usr/lib/udev/bluetooth
 ${CP} audio.conf /etc/bluetooth/audio.conf
 ${CP} main.conf /etc/bluetooth/main.conf
+${CP} asoundrc /home/pi/.asoundrc
+${CP} mpradio-bt@.service /lib/systemd/system/mpradio-bt@.service
 
 #compile and $INSTALL mpradio_cc
 if [[ $remove ]]; then
@@ -76,9 +79,11 @@ cp -f ../install/mpradio.service /etc/systemd/system/mpradio.service
 cp -f ../install/simple-agent.service /etc/systemd/system/simple-agent.service
 if [[ $remove ]]; then
 	systemctl disable mpradio.service
+	systemctl disable bluealsa
 	systemctl disable simple-agent.service
 else
 	systemctl enable mpradio.service
+	systemctl enable bluealsa
 	systemctl enable simple-agent.service
 fi
 

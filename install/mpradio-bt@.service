@@ -1,0 +1,10 @@
+[Unit]
+Description=mpradio bluetooth playback %I
+Requires=bluetooth.service bluealsa.service
+[Service]
+Type=simple
+User=pi
+Group=lp
+ExecStart=/home/pi/mpradio %I
+[Install]
+WantedBy=multi-user.target
