@@ -5,6 +5,7 @@ Exclusively tested on Minimal Raspbian (ARM)
 
 # Known issues
 - The first bluetooth connection after boot is known to fail after few seconds. All subsequent connections will work just fine.
+- Due to a design flaw in BCM43438 WIFI/BT chipset, you might need to disable WiFi if you experience BT audio stuttering on Pi Zero W and Pi 3: https://github.com/raspberrypi/linux/issues/1402
 
 # installation
 ` git clone https://github.com/morrolinux/mpradio.git mpradio-master `
