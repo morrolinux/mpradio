@@ -56,7 +56,6 @@ ${CP} simple-agent /bin/simple-agent
 mkdir /pirateradio
 cp -f ../install/pirateradio.config /pirateradio/pirateradio.config
 
-cp -f daemon.conf /etc/pulse/daemon.conf
 mkdir /usr/lib/udev
 ${CP} bluetooth /usr/lib/udev/bluetooth
 ${CP} audio.conf /etc/bluetooth/audio.conf
