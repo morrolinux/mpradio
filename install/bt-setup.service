@@ -1,6 +1,7 @@
 [Unit]
 Description=mpradio bluetooth init script
 Requires=bluetooth.service bluealsa.service
+After=bluetooth.service
 
 [Service]
 Type=simple
