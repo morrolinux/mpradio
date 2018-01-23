@@ -1,6 +1,6 @@
 [Unit]
 Description=simple-agent service
-After=network.target auditd.service
+After=network.target auditd.service bluetooth.service
 
 [Service]
 Type=simple
