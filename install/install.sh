@@ -50,7 +50,6 @@ else
 fi
 
 #Installing needed files and configurations
-${CP} bluezutils.py /bin/bluezutils.py
 ${CP} bt-setup.sh /bin/bt-setup.sh
 ${CP} simple-agent /bin/simple-agent
 mkdir /pirateradio
