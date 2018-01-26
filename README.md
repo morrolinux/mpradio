@@ -4,7 +4,7 @@ Morrolinux's Pirate radio (PiFmRDS implementation with Bluetooth and mp3 support
 Exclusively tested on Minimal Raspbian (ARM)
 
 # Known issues
-- The first bluetooth connection after boot is known to fail after few seconds. All subsequent connections will work just fine.
+- ~~The first bluetooth connection after boot is known to fail after few seconds. All subsequent connections will work just fine.~~ 
 - Due to a design flaw in BCM43438 WIFI/BT chipset, you might need to disable WiFi if you experience BT audio stuttering on Pi Zero W and Pi 3: https://github.com/raspberrypi/linux/issues/1402
 
 # installation
@@ -21,7 +21,7 @@ However, you can change the FM streaming frequency (which is otherwise defaulted
 pirateradio.config example:
 ```
 [PIRATERADIO]
-frequency=105.3
+frequency=88.8
 ```
 
 # update 
@@ -31,6 +31,7 @@ and then:
 installation steps
 
 # uninstallation / removal
+` cd mpradio-master/install `
 ` ./install.sh remove `
 
 # Debugging / Troubleshooting
@@ -47,6 +48,12 @@ start or stop the service:
 As for Bluetooth:
 
 Bluetooth connection logs are under ` /var/log/bluetooth_dev `
+
+if Raspberry's Bluetooth is not showing up, check if the interface is UP and the bt-setup script has been executed:
+
+` $ hciconfig `
+
+` $ sudo systemctl status bt-setup `
 
 if you are having issues with bluetooth audio pairing, please also check if simple-agent service is running:
 
