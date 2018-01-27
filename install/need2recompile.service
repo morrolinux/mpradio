@@ -1,0 +1,15 @@
+[Unit]
+Description=Determine wheather the running device has changed and PiFmRDS recompile is needed or not
+After=network.target auditd.service
+
+[Service]
+Type=idle
+User=root
+Group=root
+ExecStart=/bin/bash /bin/need2recompile.sh
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=control-group
+
+[Install]
+WantedBy=multi-user.target
+
