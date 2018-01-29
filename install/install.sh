@@ -52,6 +52,7 @@ fi
 #Installing needed files and configurations
 ${CP} need2recompile.sh /bin/need2recompile.sh
 ${CP} bt-setup.sh /bin/bt-setup.sh
+${CP} mpradio-legacyRDS.sh /bin/mpradio-legacyRDS.sh
 ${CP} simple-agent /bin/simple-agent
 mkdir /pirateradio
 cp -f ../install/pirateradio.config /pirateradio/pirateradio.config
@@ -76,6 +77,7 @@ ${CP} mpradio /home/pi/mpradio
 
 #Installing service units...
 cp -f ../install/need2recompile.service /etc/systemd/system/need2recompile.service
+cp -f ../install/mpradio-legacy-rds.service /etc/systemd/system/mpradio-legacy-rds.service
 cp -f ../install/bt-setup.service /etc/systemd/system/bt-setup.service
 cp -f ../install/mpradio.service /etc/systemd/system/mpradio.service
 cp -f ../install/simple-agent.service /etc/systemd/system/simple-agent.service
@@ -85,12 +87,14 @@ if [[ $remove ]]; then
 	systemctl disable simple-agent.service
 	systemctl disable bt-setup.service
 	systemctl disable need2recompile.service
+	systemctl disable mpradio-legacy-rds.service
 else
 	systemctl enable mpradio.service
 	systemctl enable bluealsa.service
 	systemctl enable simple-agent.service
 	systemctl enable bt-setup.service
 	systemctl enable need2recompile.service
+	systemctl enable mpradio-legacy-rds.service
 fi
 
 #Installing PiFmRDS...

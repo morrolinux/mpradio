@@ -1,0 +1,12 @@
+[Unit]
+Description=RDS overlapping to overcome 8 chars limitation
+After=mpradio.service
+
+[Service]
+Type=simple
+ExecStart=/bin/bash /bin/mpradio-legacyRDS.sh
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=control-group
+
+[Install]
+WantedBy=multi-user.target
