@@ -4,6 +4,7 @@
 #include <string>
 #include <list>
 #include <time.h>
+#include <sys/stat.h>
 using namespace std;
 #include "datastruct.h"
 
@@ -13,22 +14,9 @@ list<string>::iterator it;
 
 void legacy_rds_init()
 {
-	system("rm -f /home/pi/rds_ctl");
-	system("/usr/bin/mkfifo /home/pi/rds_ctl");
-	system("chmod 777 /home/pi/rds_ctl");
-}
-
-/** 
- * launches pulseaudio, setup bluetooth for connections ecc...
- * this function needs to be launched only once.
- */
-
-void init()
-{
-	//system("sudo killall pulseaudio");
-	//system("/usr/bin/sudo -u pi -s pulseaudio -D");
-	//system("systemctl force-reload udev systemd-udevd-control.socket systemd-udevd-kernel.socket");
-	//system("hciconfig hci0 up && hciconfig hci0 piscan");
+	remove("/home/pi/rds_ctl");
+	mkfifo("/home/pi/rds_ctl",S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
+	chmod("/home/pi/rds_ctl",0777);
 }
 
 /**
@@ -55,15 +43,14 @@ void get_list()
 int play_storage()
 {
 	bool repeat = true;
-	
+	srand (time(NULL));
+	legacy_rds_init();
+	ofstream playing;
+
 	while(repeat){
 		get_list();		/**< generate a file list */
 		int next;
 		int qsize=pqueue.size();
-		srand (time(NULL));
-	
-		init();
-		legacy_rds_init();
 	
 		string sox="sox -t mp3 -v 1.3 -r 48000 -G";
 		string sox_params="-t wav -";
@@ -91,7 +78,10 @@ int play_storage()
 				pifm1+" "+"\""+songname+"\""+" "+pifm2+" "+"\""+songname+"\""+" "+pifm3+" "+s.freq;
 	
 
-			system(("echo "+songname+"> /home/pi/now_playing").c_str());
+			playing.open("/home/pi/now_playing");
+			playing<<songname;
+			playing.close();
+
 			system(cmdline.c_str());
 		}
 	}
@@ -101,16 +91,9 @@ int play_storage()
 int play_bt(string device)
 {
 	
-	//string s0="/bin/su pi -c \"parec -d";
-	//string s1="sox -t raw -v 1.3 -G -b 16 -e signed -c 2 -r 44100 - -t wav - | sudo /home/pi/PiFmRds/src/pi_fm_rds -ps 'BLUETOOTH' -rt 'A2DP BLUETOOTH' -freq";
-	//string s2="-audio -\"";
-	//string cmdline=s0+" "+device+" | "+s1+" "+s.freq+" "+s2;
-
 	string cmdline="arecord -D bluealsa -f cd -c 2 | sox -t raw -v 1.7 -G -b 16 -e signed -c 2 -r 44100 - -t wav - | sudo /home/pi/PiFmRds/src/pi_fm_rds -ps 'BLUETOOTH' -rt 'A2DP BLUETOOTH' -freq "+s.freq+" -audio -";
 
 	system(cmdline.c_str());
-
-
 	return 0;
 }
 

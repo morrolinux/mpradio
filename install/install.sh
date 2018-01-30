@@ -69,6 +69,10 @@ if [[ $remove ]]; then
 	echo "not compiling before uninstall"
 else
 	cd ../src/
+
+	mkdir libs
+	git clone https://github.com/benhoyt/inih.git libs/inih
+
 	make clean
 	make
 fi

@@ -1,4 +1,4 @@
-OBJ = mpradio.o player.o fsrun.o settings_provider.o
+OBJ = mpradio.o player.o settings_provider.o libs/inih/ini.o libs/inih/cpp/INIReader.cpp
 CXXFLAGS=-Wall	
 
 mpradio: $(OBJ)

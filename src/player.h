@@ -1,3 +1,5 @@
+#pragma once
+
 /** 
  * player routine for multimedia files on storage.
  * calls ::getsettings to fetch the needed settings and starts to play 

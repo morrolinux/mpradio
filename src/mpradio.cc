@@ -14,7 +14,6 @@
 #include <iostream>
 using namespace std;
 
-#include "fsrun.h"
 #include "player.h"
 #include "settings_provider.h"
 
@@ -27,7 +26,6 @@ using namespace std;
 */
 int main(int argc, char* argv[])
 {
-	need2recompile();
 	getsettings();
 
 	if(argc>1){

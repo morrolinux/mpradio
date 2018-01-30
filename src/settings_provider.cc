@@ -4,6 +4,7 @@
 #include <string>
 using namespace std;
 
+#include "libs/inih/cpp/INIReader.h"
 #include "datastruct.h"
 
 #define FORMAT "mp3"
@@ -14,29 +15,16 @@ using namespace std;
 
 settings s;
 
-inline bool exists_test (const std::string& name) {
-    ifstream f(name.c_str());
-    return f.good();
-}
-
 /** fetch the key:value pair for the query section/key passed by argument */
 string read(string section,string key)
 {
-	if(! exists_test(SETTINGS) ) return "";
-	
-	char * tmp= new char[STRLEN];
-	FILE *fp;
-	string s0="crudini --get";
-	string s1=SETTINGS;
-	string s2=section;
-	string s3=key;
-	string cmd=s0+" "+s1+" "+s2+" "+s3;
-	fp = popen(cmd.c_str(), "r");
-	fgets(tmp, STRLEN, fp);
-	pclose(fp);
-	string result=tmp;
-	delete [] tmp;
-	return result;
+	INIReader reader("/pirateradio/pirateradio.config");
+	if (reader.ParseError() < 0) {
+		cout << "Can't load config file\n";
+		return "";
+	}
+
+	return reader.Get(section,key,"ERR");
 }
 
 void getsettings()
@@ -45,8 +33,6 @@ void getsettings()
         if(s.freq== ""){
                 cout<<"no frequency has been set. setting to default..."<<endl;
                 s.freq=DEFAULTFREQ;
-        }else{
-                s.freq.erase(s.freq.size()-1);
         }
 	cout<<s.freq<<endl;
 
