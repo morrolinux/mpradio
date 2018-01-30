@@ -6,11 +6,11 @@ using namespace std;
 
 #include "datastruct.h"
 
-#define FORMAT "mp3"
-#define STORAGE "/pirateradio"
-#define SETTINGS "/pirateradio/pirateradio.config"
-#define DEFAULTFREQ "88.8"
-#define STRLEN 40
+constexpr auto FORMAT = "mp3";
+constexpr auto STORAGE = "/pirateradio";
+constexpr auto SETTINGS = "/pirateradio/pirateradio.config";
+constexpr auto DEFAULTFREQ = "88.8";
+constexpr int STRLEN = 40;
 
 settings s;
 
@@ -25,12 +25,11 @@ string read(string section,string key)
 	if(! exists_test(SETTINGS) ) return "";
 	
 	char * tmp= new char[STRLEN];
+    
 	FILE *fp;
-	string s0="crudini --get";
-	string s1=SETTINGS;
-	string s2=section;
-	string s3=key;
-	string cmd=s0+" "+s1+" "+s2+" "+s3;
+
+	string cmd=string("crudini --get ") + SETTINGS + " " + section + " " + key;
+    
 	fp = popen(cmd.c_str(), "r");
 	fgets(tmp, STRLEN, fp);
 	pclose(fp);
@@ -42,12 +41,12 @@ string read(string section,string key)
 void getsettings()
 {
 	s.freq=read("PIRATERADIO","frequency");
-        if(s.freq== ""){
-                cout<<"no frequency has been set. setting to default..."<<endl;
-                s.freq=DEFAULTFREQ;
-        }else{
-                s.freq.erase(s.freq.size()-1);
-        }
+    if(s.freq== ""){
+            cout<<"no frequency has been set. setting to default..."<<endl;
+            s.freq=DEFAULTFREQ;
+    }else{
+            s.freq.erase(s.freq.size()-1);
+    }
 	cout<<s.freq<<endl;
 
 	s.storage=STORAGE;

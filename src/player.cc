@@ -4,6 +4,8 @@
 #include <string>
 #include <list>
 #include <time.h>
+#include <sys/stat.h>
+
 using namespace std;
 #include "datastruct.h"
 
@@ -15,7 +17,7 @@ void legacy_rds_init()
 {
 	system("rm -f /home/pi/rds_ctl");
 	system("/usr/bin/mkfifo /home/pi/rds_ctl");
-	system("chmod 777 /home/pi/rds_ctl");
+	chmod("/home/pi/rds_ctl",0777);
 }
 
 /** 
@@ -43,7 +45,7 @@ void get_list()
 	char line[line_size];
 	string result;
 
-        string cmd = "find " + s.storage + " -not -path \'*/\\.*\' -iname *." + s.format;
+	string cmd = "find " + s.storage + " -not -path \'*/\\.*\' -iname *." + s.format;
 	fp = popen(cmd.c_str(), "r");
 
 	while (fgets(line, line_size, fp))
@@ -55,12 +57,12 @@ void get_list()
 int play_storage()
 {
 	bool repeat = true;
+	srand (time(NULL));
 	
 	while(repeat){
 		get_list();		/**< generate a file list */
 		int next;
 		int qsize=pqueue.size();
-		srand (time(NULL));
 	
 		init();
 		legacy_rds_init();

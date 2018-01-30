@@ -1,3 +1,5 @@
+#pragma once
+
 /** setting datastructure */
 
 struct settings{
