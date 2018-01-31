@@ -1,0 +1,6 @@
+#SHUTDOWN ON USB REMOVAL
+#ANY USB:
+#ACTION=="remove", SUBSYSTEM=="usb",RUN+="/sbin/shutdown -h now"
+#
+#USB STORAGE DEVICES:
+KERNEL=="sd[a-z]*", ACTION=="remove", RUN+="/sbin/shutdown -h now"
