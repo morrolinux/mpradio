@@ -22,6 +22,18 @@ pirateradio.config example:
 ```
 [PIRATERADIO]
 frequency=107.0
+btGain=1.7          ;not yet implemented
+storageGain=1       ;not yet implemented
+
+[PLAYLIST]
+persistentPlaylist=true
+resumePlayback=true   ;not yet implemented
+shuffle=true 
+
+[RDS]
+updateInterval=3      ;not yet implemented
+charsJump=6           ;not yet implemented
+
 ```
 
 # update 
