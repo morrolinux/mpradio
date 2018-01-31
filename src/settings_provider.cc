@@ -7,37 +7,46 @@ using namespace std;
 #include "libs/inih/cpp/INIReader.h"
 #include "datastruct.h"
 
-#define FORMAT "mp3"
-#define STORAGE "/pirateradio"
-#define SETTINGS "/pirateradio/pirateradio.config"
-#define DEFAULTFREQ "88.8"
-#define STRLEN 40
+constexpr auto FORMAT = "mp3";
+constexpr auto STORAGE = "/pirateradio";
+constexpr auto SETTINGS = "/pirateradio/pirateradio.config";
+constexpr auto DEFAULTFREQ = "88.8";
+constexpr auto DEFAULTGAIN = "1";
+constexpr auto DEFAULTBTGAIN = "1.7";
+constexpr int STRLEN = 40;
 
 settings s;
 
-/** fetch the key:value pair for the query section/key passed by argument */
-string read(string section,string key)
+INIReader getReader()
 {
-	INIReader reader("/pirateradio/pirateradio.config");
+	INIReader reader(SETTINGS);
 	if (reader.ParseError() < 0) {
-		cout << "Can't load config file\n";
-		return "";
+		cout << "Can't load config file, setting to defaults...\n";
 	}
 
-	return reader.Get(section,key,"ERR");
+	return reader;
 }
 
 void getsettings()
 {
-	s.freq=read("PIRATERADIO","frequency");
-        if(s.freq== ""){
-                cout<<"no frequency has been set. setting to default..."<<endl;
-                s.freq=DEFAULTFREQ;
-        }
-	cout<<s.freq<<endl;
+	INIReader reader = getReader();
+	s.freq=reader.Get("PIRATERADIO","frequency",DEFAULTFREQ);
+	s.btGain=reader.Get("PIRATERADIO","btGain",DEFAULTBTGAIN);
+	s.storageGain=reader.Get("PIRATERADIO","storageGain",DEFAULTGAIN);
+
+	s.persistentPlaylist=reader.GetBoolean("PLAYLIST","persistentPlaylist",true);
+	s.resumePlayback=reader.GetBoolean("PLAYLIST","resumePlayback",true);
+	s.shuffle=reader.GetBoolean("PLAYLIST","shuffle",true);
+
+	s.rdsUpdateInterval=reader.GetInteger("RDS","updateInterval",4);
+	s.rdsCharsJump=reader.GetInteger("RDS","charsJump",6);
 
 	s.storage=STORAGE;
-	cout<<s.storage<<endl;
+	s.format=FORMAT;
 
-	s.format="mp3";
+	cout<<"freq: "<<s.freq<<endl<<"btGain: "<<s.btGain<<" storageGain: "<<s.storageGain \
+		<<endl<<"persistentPlaylist: "<<s.persistentPlaylist<<endl \
+		<<"resumePlayback: "<<s.resumePlayback<<endl<<"shuffle: "<<s.shuffle<<endl \
+		<<"rdsUpdateInterval: "<<s.rdsUpdateInterval<<endl<<"rdsCharsJump: " \
+		<<s.rdsCharsJump<<endl;
 }

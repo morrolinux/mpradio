@@ -19,6 +19,45 @@ void legacy_rds_init()
 	chmod("/home/pi/rds_ctl",0777);
 }
 
+void save_list(int qsize)
+{
+	if(!s.persistentPlaylist)	/*< list is saved to file (or not) according to settings */
+		return;
+
+	if(qsize==0){
+		remove("/home/pi/playlist");
+		return;
+	}
+
+	ofstream list;
+	list.open("/home/pi/playlist");
+
+	it=pqueue.begin();
+
+	for(int i=0; i<qsize; i++){
+		list<<*it<<endl;
+		advance (it,1);
+	}
+	list.close();
+}
+
+void load_list()
+{
+	if(!s.persistentPlaylist)	/*< list is loaded from file (or not) according to settings */
+		return;
+
+	string line;
+	ifstream list("/home/pi/playlist");
+	if (list.is_open()){
+		while ( getline (list,line) ){
+			pqueue.push_back(line);
+			//cout << line << '\n';
+		}
+		list.close();
+	}
+}
+
+
 /**
  * creates a file list each time it is launched 
  * and saves the elements in pqueue (play queue)
@@ -26,6 +65,10 @@ void legacy_rds_init()
 
 void get_list()
 {
+	load_list();		
+	if(pqueue.size() != 0)
+		return;
+
 	FILE *fp;
 	const int line_size=200;
 	char line[line_size];
@@ -34,10 +77,22 @@ void get_list()
         string cmd = "find " + s.storage + " -not -path \'*/\\.*\' -iname *." + s.format;
 	fp = popen(cmd.c_str(), "r");
 
-	while (fgets(line, line_size, fp))
-		pqueue.push_back(line);
+	while (fgets(line, line_size, fp)){
+		string s = line;
+		s=s.erase(s.find('\n'));	//remove lewline char
+		pqueue.push_back(s);
+	}
 
 	pclose(fp);
+}
+
+int getNextElement(int qsize)
+{
+	if(s.shuffle)
+		return rand() % qsize;		
+	else
+		return 0;
+	
 }
 
 int play_storage()
@@ -49,7 +104,7 @@ int play_storage()
 
 	while(repeat){
 		get_list();		/**< generate a file list */
-		int next;
+		int next; 
 		int qsize=pqueue.size();
 	
 		string sox="sox -t mp3 -v 1.3 -r 48000 -G";
@@ -59,15 +114,15 @@ int play_storage()
 		string pifm3="-audio - -freq";
 		string songpath;
 		
-		if(qsize <= 0) repeat=false;
+		if(qsize <= 0) repeat=false;		/**< infinite loop protection if no file are present */
 		
 		while(qsize > 0)
 		{
-			next=rand() % qsize;		/**< extract a random file from the list */
 			it=pqueue.begin();
+			next=getNextElement(qsize);
 			advance (it,next);
 			songpath=*it;
-			songpath.erase(songpath.size()-1);
+			cout<<endl<<"PLAY: "<<songpath<<endl;
 			pqueue.erase(it);
 			qsize--;
 	
@@ -83,6 +138,7 @@ int play_storage()
 			playing.close();
 
 			system(cmdline.c_str());
+			save_list(qsize);
 		}
 	}
 	return 0;
