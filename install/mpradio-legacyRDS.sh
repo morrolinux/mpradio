@@ -1,5 +1,6 @@
 #!/bin/bash
 
+sleep 5
 JUMP=6
 
 while true
