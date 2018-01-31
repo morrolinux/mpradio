@@ -3,6 +3,16 @@ Morrolinux's Pirate radio (PiFmRDS implementation with Bluetooth and mp3 support
 
 Exclusively tested on Minimal Raspbian (ARM)
 
+# Features
+- [x] Safely shutdown your Pi by unplugging the USB stick
+- [x] persistent playlists (remember the playlist/playback status across reboots)
+- [ ] resume track from its playback status hh:mm:ss
+- [x] shuffle on/off
+- [x] Scrolling RDS to overcome 8-chars limitation 
+- [ ] skip to the next song by pressing a push-button (GPIO-connected)
+- [ ] Android app to edit settings via bluetooth? 
+
+
 # Known issues
 - ~~The first bluetooth connection after boot is known to fail after few seconds. All subsequent connections will work just fine.~~ 
 - Due to a design flaw in BCM43438 WIFI/BT chipset, you might need to disable WiFi if you experience BT audio stuttering on Pi Zero W and Pi 3: https://github.com/raspberrypi/linux/issues/1402
