@@ -107,7 +107,7 @@ int play_storage()
 		int next; 
 		int qsize=pqueue.size();
 	
-		string sox="sox -t mp3 -v 1.3 -r 48000 -G";
+		string sox="sox -t "+s.format+" -v "+s.storageGain+" -r 48000 -G";
 		string sox_params="-t wav -";
 		string pifm1="/home/pi/PiFmRds/src/pi_fm_rds -ctl /home/pi/rds_ctl -ps";
 		string pifm2="-rt";
@@ -147,7 +147,7 @@ int play_storage()
 int play_bt(string device)
 {
 	
-	string cmdline="arecord -D bluealsa -f cd -c 2 | sox -t raw -v 1.7 -G -b 16 -e signed -c 2 -r 44100 - -t wav - | sudo /home/pi/PiFmRds/src/pi_fm_rds -ps 'BLUETOOTH' -rt 'A2DP BLUETOOTH' -freq "+s.freq+" -audio -";
+	string cmdline="arecord -D bluealsa -f cd -c 2 | sox -t raw -v "+s.btGain+" -G -b 16 -e signed -c 2 -r 44100 - -t wav - | sudo /home/pi/PiFmRds/src/pi_fm_rds -ps 'BLUETOOTH' -rt 'A2DP BLUETOOTH' -freq "+s.freq+" -audio -";
 
 	system(cmdline.c_str());
 	return 0;
