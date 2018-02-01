@@ -53,7 +53,8 @@ and then:
 installation steps
 
 OR, if you are a git guy:
-`cd mpradio-master && git fetch origin && git reset --hard origin/master `
+
+`cd mpradio-master && git fetch origin && git reset --hard origin/master && cd install && sudo ./install.sh`
 
 # uninstallation / removal
 ` cd mpradio-master/install `
