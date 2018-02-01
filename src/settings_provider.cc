@@ -10,7 +10,7 @@ using namespace std;
 constexpr auto FORMAT = "mp3";
 constexpr auto STORAGE = "/pirateradio";
 constexpr auto SETTINGS = "/pirateradio/pirateradio.config";
-constexpr auto DEFAULTFREQ = "88.8";
+constexpr auto DEFAULTFREQ = "107.0";
 constexpr auto DEFAULTGAIN = "1.3";
 constexpr auto DEFAULTBTGAIN = "1.7";
 constexpr int STRLEN = 40;
