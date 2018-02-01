@@ -41,8 +41,8 @@ resumePlayback=true   ;not yet implemented
 shuffle=true 
 
 [RDS]
-updateInterval=3      ;not yet implemented
-charsJump=6           ;not yet implemented
+updateInterval=3      ;seconds between RDS refresh. lower values could result in RDS being ignored by your radio receiver
+charsJump=6           ;how many characters should shift between updates [1-8]
 
 ```
 
@@ -51,6 +51,9 @@ charsJump=6           ;not yet implemented
 and then:
 
 installation steps
+
+OR, if you are a git guy:
+`cd mpradio-master && git fetch origin && git reset --hard origin/master `
 
 # uninstallation / removal
 ` cd mpradio-master/install `
