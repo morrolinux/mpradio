@@ -26,14 +26,14 @@ Exclusively tested on Minimal Raspbian (ARM)
 
 # configuration
 By default, mpradio will always be running automatically after boot once installed. No additional configuration is needed.
-However, you can change the FM streaming frequency (which is otherwise defaulted to 88.8) by placing a file named pirateradio.config in the root of a USB key (which of course, will need to stay plugged for the settings to be permanent)
+However, you can change the FM streaming frequency (which is otherwise defaulted to 107.0) by placing a file named pirateradio.config in the root of a USB key (which of course, will need to stay plugged for the settings to be permanent)
 
 pirateradio.config example:
 ```
 [PIRATERADIO]
 frequency=107.0
-btGain=1.7          ;not yet implemented
-storageGain=1       ;not yet implemented
+btGain=1.7            ;gain setting for bluetooth streaming
+storageGain=1.3       ;gain setting for stored files streaming
 
 [PLAYLIST]
 persistentPlaylist=true
