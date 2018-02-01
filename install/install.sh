@@ -56,9 +56,9 @@ ${CP} mpradio-legacyRDS.sh /bin/mpradio-legacyRDS.sh
 ${CP} simple-agent /bin/simple-agent
 ${CP} 100-usb.rules /etc/udev/rules.d/100-usb.rules
 mkdir /pirateradio
-cp -f ../install/pirateradio.config /pirateradio/pirateradio.config
+${CP} -f ../install/pirateradio.config /pirateradio/pirateradio.config
 
-mkdir /usr/lib/udev
+mkdir -p /usr/lib/udev
 ${CP} bluetooth /usr/lib/udev/bluetooth
 ${CP} audio.conf /etc/bluetooth/audio.conf
 ${CP} main.conf /etc/bluetooth/main.conf
