@@ -108,7 +108,7 @@ int play_storage()
 		int qsize=pqueue.size();
 	
 		string sox="sox -t "+s.format+" -v "+s.storageGain+" -r 48000 -G";
-		string sox_params="-t wav -";
+		string sox_params="-t wav - compand 0.3,1 6:-70,-60,-20 -5 -90 0.2";
 		string pifm1="/home/pi/PiFmRds/src/pi_fm_rds -ctl /home/pi/rds_ctl -ps";
 		string pifm2="-rt";
 		string pifm3="-audio - -freq";
