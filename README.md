@@ -11,6 +11,9 @@ Exclusively tested on Minimal Raspbian (ARM)
 - [x] Scrolling RDS to overcome 8-chars limitation 
 - [ ] skip to the next song by pressing a push-button (GPIO-connected)
 - [ ] Android app to edit settings via bluetooth? 
+- [ ] Bluetooth speaker via jack audio output?
+- [ ] Read metadata from the mp3 files 
+- [ ] Display Android notifications over RDS?
 
 
 # Known issues
