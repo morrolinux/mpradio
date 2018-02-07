@@ -1,98 +1,62 @@
 #include <iostream>
-#include <fstream>
-#include <stdlib.h>
 #include <string>
 #include <list>
-#include <time.h>
+#include <thread>
 #include <sys/stat.h>
 using namespace std;
 #include "datastruct.h"
+#include "files.h"
+
+constexpr auto RDS_CTL= "/home/pi/rds_ctl";
 
 extern settings s;
 list<string> pqueue;
 list<string>::iterator it;
+playbackStatus ps;
 
 void legacy_rds_init()
 {
-	remove("/home/pi/rds_ctl");
-	mkfifo("/home/pi/rds_ctl",S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
-	chmod("/home/pi/rds_ctl",0777);
+	remove(RDS_CTL);
+	mkfifo(RDS_CTL,S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
+	chmod(RDS_CTL,0777);
 }
 
-void save_list(int qsize)
+void set_next_element(int qsize)
 {
-	if(!s.persistentPlaylist)	/*< list is saved to file (or not) according to settings */
-		return;
-
-	if(qsize==0){
-		remove("/home/pi/playlist");
+	if(s.resumePlayback && !ps.resumed){
+		load_playback_status();
 		return;
 	}
-
-	ofstream list;
-	list.open("/home/pi/playlist");
-
-	it=pqueue.begin();
-
-	for(int i=0; i<qsize; i++){
-		list<<*it<<endl;
-		advance (it,1);
-	}
-	list.close();
-}
-
-void load_list()
-{
-	if(!s.persistentPlaylist)	/*< list is loaded from file (or not) according to settings */
-		return;
-
-	string line;
-	ifstream list("/home/pi/playlist");
-	if (list.is_open()){
-		while ( getline (list,line) ){
-			pqueue.push_back(line);
-			//cout << line << '\n';
-		}
-		list.close();
-	}
-}
-
-
-/**
- * creates a file list each time it is launched 
- * and saves the elements in pqueue (play queue)
- */
-
-void get_list()
-{
-	load_list();		
-	if(pqueue.size() != 0)
-		return;
-
-	FILE *fp;
-	const int line_size=200;
-	char line[line_size];
-	string result;
-
-        string cmd = "find " + s.storage + " -not -path \'*/\\.*\' -iname *." + s.format;
-	fp = popen(cmd.c_str(), "r");
-
-	while (fgets(line, line_size, fp)){
-		string s = line;
-		s=s.erase(s.find('\n'));	//remove lewline char
-		pqueue.push_back(s);
-	}
-
-	pclose(fp);
-}
-
-int getNextElement(int qsize)
-{
 	if(s.shuffle)
-		return rand() % qsize;		
+		ps.songIndex=(rand() % qsize);
 	else
-		return 0;
-	
+		ps.songIndex=0;
+}
+
+/** 
+  * DO NOT HINIBIT THIS FUNCTION
+  * as it adds the needed " " for the path as well
+  */
+string trim_audio_track(string &path)
+{
+	string trim="";
+
+	if(s.resumePlayback && !ps.resumed){
+		int filesize=get_file_size(path);
+		float duration=get_song_duration(path);
+		int bs=get_file_bs(filesize,duration);
+
+		cout<<"seeking the track..."<<endl;
+		trim="dd bs="+to_string(bs)+"k skip="+to_string(ps.playbackPosition)+" if=\""+path+"\" | ";
+		path=" - ";
+		ps.resumed=true;
+	}else{
+		trim="";
+		ps.playbackPosition=0;
+		path="\""+path+"\"";
+	}
+
+	return trim;
 }
 
 int play_storage()
@@ -100,11 +64,11 @@ int play_storage()
 	bool repeat = true;
 	srand (time(NULL));
 	legacy_rds_init();
-	ofstream playing;
+
+	thread persistPlayback (update_playback_status);
 
 	while(repeat){
 		get_list();		/**< generate a file list */
-		int next; 
 		int qsize=pqueue.size();
 	
 		string sox="sox -t "+s.format+" -v "+s.storageGain+" -r 48000 -G";
@@ -119,26 +83,29 @@ int play_storage()
 		while(qsize > 0)
 		{
 			it=pqueue.begin();
-			next=getNextElement(qsize);
-			advance (it,next);
+			set_next_element(qsize);
+			advance (it,ps.songIndex);
 			songpath=*it;
-			cout<<endl<<"PLAY: "<<songpath<<endl;
-			pqueue.erase(it);
-			qsize--;
-	
+
 			size_t found = songpath.find_last_of("/");	/**< extract song name out of the absolute file path */
 	  		string songname=songpath.substr(found+1);
+			ps.songName=songname;
+			cout<<endl<<"PLAY: "<<songpath<<endl;
 	
-			string cmdline=sox+" "+"\""+songpath+"\""+" "+sox_params+" | "+\
+			sox=trim_audio_track(songpath)+sox;		/**< substitute songname with stdin (-) from dd if playback must be resumed */
+	
+			string cmdline=sox+" "+songpath+" "+sox_params+" | "+\
 				pifm1+" "+"\""+songname+"\""+" "+pifm2+" "+"\""+songname+"\""+" "+pifm3+" "+s.freq;
-	
 
-			playing.open("/home/pi/now_playing");
-			playing<<songname;
-			playing.close();
+	
+			update_now_playing(songname);
 
 			system(cmdline.c_str());
+
+			pqueue.erase(it);	/**< shorten the playlist and save it after playback */
+			qsize--;
 			save_list(qsize);
+			remove("/home/pi/ps");	/**< removing playback status file as not needed when playback ends */
 		}
 	}
 	return 0;

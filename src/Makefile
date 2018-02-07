@@ -1,8 +1,8 @@
-OBJ = mpradio.o player.o settings_provider.o libs/inih/ini.o libs/inih/cpp/INIReader.cpp
-CXXFLAGS=-Wall	
+OBJ = mpradio.o player.o settings_provider.o files.o libs/inih/ini.o libs/inih/cpp/INIReader.cpp
+CXXFLAGS=-Wall 
 
 mpradio: $(OBJ)
-	g++ -o mpradio $(OBJ)
+	g++ -pthread -o mpradio $(OBJ)
 
 -include dependencies
 

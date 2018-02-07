@@ -14,3 +14,10 @@ struct settings{
 	int rdsUpdateInterval;
 	int rdsCharsJump;
 };
+
+struct playbackStatus{
+	string songName;
+	int songIndex=0;
+	int playbackPosition=0;
+	bool resumed=false;
+};
