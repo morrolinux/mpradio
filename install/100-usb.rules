@@ -3,4 +3,4 @@
 #ACTION=="remove", SUBSYSTEM=="usb",RUN+="/sbin/shutdown -h now"
 #
 #USB STORAGE DEVICES:
-KERNEL=="sd[a-z]*", ACTION=="remove", RUN+="/sbin/shutdown -h now"
+KERNEL=="sd[a-z]*", ACTION=="remove", RUN+="/usr/bin/killall mpradio && /sbin/shutdown -h now"
