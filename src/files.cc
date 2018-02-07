@@ -149,11 +149,11 @@ void update_playback_status()
 	unsigned int seconds = 5;
 	ofstream psfile;
 	while (true){
-        	psfile.open("/home/pi/ps");
-		psfile<<ps.songIndex<<" "<<ps.playbackPosition<<endl;
-		psfile.close();
 		sleep(seconds);
 		ps.playbackPosition+=5;
+		psfile.open("/home/pi/ps");
+		psfile<<ps.songIndex<<" "<<ps.playbackPosition<<endl;
+		psfile.close();
 	}
 
 }
