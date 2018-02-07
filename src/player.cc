@@ -24,7 +24,7 @@ void legacy_rds_init()
 void set_next_element(int qsize)
 {
 	if(s.resumePlayback && !ps.resumed){
-		load_playback_status();
+		//load_playback_status();    //already called at init stage
 		return;
 	}
 	if(s.shuffle)
@@ -64,7 +64,8 @@ int play_storage()
 	bool repeat = true;
 	srand (time(NULL));
 	legacy_rds_init();
-
+	
+	load_playback_status();
 	thread persistPlayback (update_playback_status);
 
 	while(repeat){
