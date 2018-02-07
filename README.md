@@ -6,7 +6,7 @@ Exclusively tested on Minimal Raspbian (ARM)
 # Features
 - [x] Safely shutdown your Pi by unplugging the USB stick
 - [x] persistent playlists (remember the playlist/playback status across reboots)
-- [ ] resume track from its playback status hh:mm:ss
+- [x] resume track from its playback status hh:mm:ss
 - [x] shuffle on/off
 - [x] Scrolling RDS to overcome 8-chars limitation 
 - [ ] skip to the next song by pressing a push-button (GPIO-connected)
@@ -40,7 +40,7 @@ storageGain=1.3       ;gain setting for stored files streaming
 
 [PLAYLIST]
 persistentPlaylist=true
-resumePlayback=true   ;not yet implemented
+resumePlayback=true   ;require persistentPlaylist to be enabled 
 shuffle=true 
 
 [RDS]
