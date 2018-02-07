@@ -51,6 +51,7 @@ fi
 
 #Installing needed files and configurations
 ${CP} need2recompile.sh /bin/need2recompile.sh
+${CP} mpshutdown.sh /sbin/mpshutdown.sh && chmod +x /sbin/mpshutdown.sh
 ${CP} bt-setup.sh /bin/bt-setup.sh
 ${CP} mpradio-legacyRDS.sh /bin/mpradio-legacyRDS.sh
 ${CP} simple-agent /bin/simple-agent
