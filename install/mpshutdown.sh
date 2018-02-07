@@ -1,5 +1,5 @@
 #!/bin/bash
 
-/sbin/killall5 mpradio 
-/sbin/killall5 sox
+/usr/bin/killall mpradio
+/usr/bin/killall sox
 /sbin/shutdown -h now
