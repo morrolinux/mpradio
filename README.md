@@ -48,6 +48,15 @@ updateInterval=3      ;seconds between RDS refresh. lower values could result in
 charsJump=6           ;how many characters should shift between updates [1-8]
 
 ```
+# usage
+It (should) work out of the box. You need your mp3 files to be on a FAT32 usb stick. (along with the config file if you need to override default settings)
+You can **safely** shut down the Pi by unplugging the stick and waiting for about 5 seconds until the status led stops blinking.
+If you enabled "persistentPlaylist" option, your Pi will never play the same song twice before consuming the full playlist.
+If you add new songs on the usb stick, with "persistentPlaylist" enabled they won't be played until the current playlist is consumed. You can "rebuild" the playlist (looking for new recently added files) if needed:
+- boot your Pi with usb stick unplugged. (current playlist will be erased)
+- plug in your usb stick and unplug it again (this will cause a shut down) 
+- power on your Pi once again, with the usb key in it.
+- You're done! (mpradio will rebuild the playlist, counting the new files as well)
 
 # update 
 ` rm -rf mpradio-master/ ` 
@@ -96,3 +105,6 @@ if you are having issues with bluetooth not connecting once it's paired, please 
 A simple schematic of how things work together:
 
 ![Alt text](/doc/mpradio_schematic.png?raw=true "mpradio schematic")
+
+# Warning and Disclaimer
+mpradio relays on PiFmRds for FM-Streaming feature. Please note that in most states, transmitting radio waves without a state-issued licence specific to the transmission modalities (frequency, power, bandwidth, etc.) is illegal. Always use a shield between your radio receiver and the Raspberry. Never use an antenna. See PiFmRds Waring and Disclamer for more informations.
