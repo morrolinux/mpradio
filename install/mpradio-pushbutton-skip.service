@@ -1,0 +1,12 @@
+[Unit]
+Description=Skip the current song by pressing a push button connected over GPIO pins
+After=mpradio.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python /bin/mpradio-pushbutton-skip.py
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=control-group
+
+[Install]
+WantedBy=multi-user.target

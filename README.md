@@ -9,7 +9,8 @@ Exclusively tested on Minimal Raspbian (ARM)
 - [x] resume track from its playback status hh:mm:ss
 - [x] shuffle on/off
 - [x] Scrolling RDS to overcome 8-chars limitation 
-- [ ] skip to the next song by pressing a push-button (GPIO-connected)
+- [x] skip to the next song by pressing a push-button (GPIO-connected on pin 18)
+- [x] safely shutdown by holding the push-button (GPIO-connected on pin 18)
 - [ ] Android app to edit settings via bluetooth? 
 - [ ] Bluetooth speaker via jack audio output?
 - [ ] Read metadata from the mp3 files 

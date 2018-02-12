@@ -50,6 +50,7 @@ else
 fi
 
 #Installing needed files and configurations
+${CP} mpradio-pushbutton-skip.py /bin/mpradio-pushbutton-skip.py
 ${CP} need2recompile.sh /bin/need2recompile.sh
 ${CP} mpshutdown.sh /sbin/mpshutdown.sh && chmod +x /sbin/mpshutdown.sh
 ${CP} bt-setup.sh /bin/bt-setup.sh
@@ -87,6 +88,7 @@ cp -f ../install/mpradio-legacy-rds.service /etc/systemd/system/mpradio-legacy-r
 cp -f ../install/bt-setup.service /etc/systemd/system/bt-setup.service
 cp -f ../install/mpradio.service /etc/systemd/system/mpradio.service
 cp -f ../install/simple-agent.service /etc/systemd/system/simple-agent.service
+cp -f ../install/mpradio-pushbutton-skip.service /etc/systemd/system/mpradio-pushbutton-skip.service
 if [[ $remove ]]; then
 	systemctl disable mpradio.service
 	systemctl disable bluealsa.service
@@ -94,6 +96,7 @@ if [[ $remove ]]; then
 	systemctl disable bt-setup.service
 	systemctl disable need2recompile.service
 	systemctl disable mpradio-legacy-rds.service
+	systemctl disable mpradio-pushbutton-skip.service
 else
 	systemctl enable mpradio.service
 	systemctl enable bluealsa.service
@@ -101,6 +104,7 @@ else
 	systemctl enable bt-setup.service
 	systemctl enable need2recompile.service
 	systemctl enable mpradio-legacy-rds.service
+	systemctl enable mpradio-pushbutton-skip.service
 fi
 
 #Installing PiFmRDS...
