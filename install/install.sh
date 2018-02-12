@@ -31,7 +31,7 @@ apt-get -y $INSTALL git libsndfile1-dev
 BLACKLIST="/etc/modprobe.d/blacklist.conf"
 blacklistline=$(grep "blacklist snd_bcm2835" $BLACKLIST -n|cut -d: -f1)
 if [[ $blacklistline == "" ]]; then
-	echo "blacklist snd_bcm2835" >> $BLACKLIST
+	#echo "blacklist snd_bcm2835" >> $BLACKLIST	#no need to blacklist since pulseaudio removal
 	echo "blacklist ipv6" >> $BLACKLIST
 else
 	if [[ $remove ]]; then

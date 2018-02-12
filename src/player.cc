@@ -59,6 +59,14 @@ string trim_audio_track(string &path)
 	return trim;
 }
 
+void set_output(string &output)
+{
+	if(s.output == "FM" || s.output == "fm")
+		return;
+	if(s.output == "ANALOG" || s.output == "analog")
+		output="aplay";
+}
+
 int play_storage()
 {
 	bool repeat = true;
@@ -77,6 +85,7 @@ int play_storage()
 		string pifm1="/home/pi/PiFmRds/src/pi_fm_rds -ctl /home/pi/rds_ctl -ps";
 		string pifm2="-rt";
 		string pifm3="-audio - -freq";
+		string output="";
 		string songpath;
 		
 		if(qsize <= 0) repeat=false;		/**< infinite loop protection if no file are present */
@@ -94,10 +103,10 @@ int play_storage()
 			cout<<endl<<"PLAY: "<<songpath<<endl;
 	
 			sox=trim_audio_track(songpath)+sox;		/**< substitute songname with stdin (-) from dd if playback must be resumed */
+			output=pifm1+" "+"\""+songname+"\""+" "+pifm2+" "+"\""+songname+"\""+" "+pifm3+" "+s.freq;
+			set_output(output);			/**< change output device if specified */
 	
-			string cmdline=sox+" "+songpath+" "+sox_params+" | "+\
-				pifm1+" "+"\""+songname+"\""+" "+pifm2+" "+"\""+songname+"\""+" "+pifm3+" "+s.freq;
-
+			string cmdline=sox+" "+songpath+" "+sox_params+" | "+output;
 	
 			update_now_playing(songname);
 

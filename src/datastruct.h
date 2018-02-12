@@ -8,6 +8,7 @@ struct settings{
 	string format;
 	string btGain;
 	string storageGain;
+	string output;
 	bool shuffle;
 	bool persistentPlaylist;
 	bool resumePlayback;

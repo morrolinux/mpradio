@@ -13,6 +13,7 @@ constexpr auto SETTINGS = "/pirateradio/pirateradio.config";
 constexpr auto DEFAULTFREQ = "107.0";
 constexpr auto DEFAULTGAIN = "1.3";
 constexpr auto DEFAULTBTGAIN = "1.7";
+constexpr auto DEFAULTOUTPUT = "fm";
 constexpr int STRLEN = 40;
 
 settings s;
@@ -44,9 +45,11 @@ void getsettings()
 	s.storage=STORAGE;
 	s.format=FORMAT;
 
+	s.output=reader.Get("PIRATERADIO","output",DEFAULTOUTPUT);
+
 	cout<<"freq: "<<s.freq<<endl<<"btGain: "<<s.btGain<<" storageGain: "<<s.storageGain \
 		<<endl<<"persistentPlaylist: "<<s.persistentPlaylist<<endl \
 		<<"resumePlayback: "<<s.resumePlayback<<endl<<"shuffle: "<<s.shuffle<<endl \
 		<<"rdsUpdateInterval: "<<s.rdsUpdateInterval<<endl<<"rdsCharsJump: " \
-		<<s.rdsCharsJump<<endl;
+		<<s.rdsCharsJump<<endl<<"Output: "<<s.output<<endl;
 }

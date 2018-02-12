@@ -1,6 +1,7 @@
 [Unit]
 Description=simple-agent service
 After=network.target auditd.service bluetooth.service bt-setup.service
+Before=mpradio.service
 
 [Service]
 Type=simple

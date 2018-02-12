@@ -4,13 +4,14 @@ Morrolinux's Pirate radio (PiFmRDS implementation with Bluetooth and mp3 support
 Exclusively tested on Minimal Raspbian (ARM)
 
 # Features
-- [x] Safely shutdown your Pi by unplugging the USB stick
+- [x] safely shutdown your Pi by unplugging the USB stick
 - [x] persistent playlists (remember the playlist/playback status across reboots)
 - [x] resume track from its playback status hh:mm:ss
 - [x] shuffle on/off
-- [x] Scrolling RDS to overcome 8-chars limitation 
+- [x] scrolling RDS to overcome 8-chars limitation 
 - [x] skip to the next song by pressing a push-button (GPIO-connected on pin 18)
 - [x] safely shutdown by holding the push-button (GPIO-connected on pin 18)
+- [x] stream audio over FM or 3.5mm Jack 
 - [ ] Android app to edit settings via bluetooth? 
 - [ ] Bluetooth speaker via jack audio output?
 - [ ] Read metadata from the mp3 files 
@@ -36,17 +37,18 @@ pirateradio.config example:
 ```
 [PIRATERADIO]
 frequency=107.0
-btGain=1.7            ;gain setting for bluetooth streaming
-storageGain=1.3       ;gain setting for stored files streaming
+btGain=1.7            	;gain setting for bluetooth streaming
+storageGain=1.3       	;gain setting for stored files streaming
+output=fm		;[analog/fm] to stream thru FM or 3.5mm jack 
 
 [PLAYLIST]
 persistentPlaylist=true
-resumePlayback=true   ;require persistentPlaylist to be enabled 
+resumePlayback=true   	;require persistentPlaylist to be enabled 
 shuffle=true 
 
 [RDS]
-updateInterval=3      ;seconds between RDS refresh. lower values could result in RDS being ignored by your radio receiver
-charsJump=6           ;how many characters should shift between updates [1-8]
+updateInterval=3      	;seconds between RDS refresh. lower values could result in RDS being ignored by your radio receiver
+charsJump=6           	;how many characters should shift between updates [1-8]
 
 ```
 # usage
