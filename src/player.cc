@@ -46,6 +46,9 @@ string trim_audio_track(string &path)
 		float duration=get_song_duration(path);
 		int bs=get_file_bs(filesize,duration);
 
+		if(ps.playbackPosition >= 5)		/**< resume few seconds back */
+			ps.playbackPosition-=5;
+
 		cout<<"seeking the track..."<<endl;
 		trim="dd bs="+to_string(bs)+"k skip="+to_string(ps.playbackPosition)+" if=\""+path+"\" | ";
 		path=" - ";
