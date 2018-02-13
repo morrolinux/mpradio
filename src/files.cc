@@ -15,21 +15,29 @@ extern list<string> pqueue;
 extern list<string>::iterator it;
 extern playbackStatus ps;
 
-string get_process_output_line(string cmd){
+int get_process_output_line(string cmd,string &output){
 
+	int exitcode=0;
 	FILE *fp;
 	const int line_size=200;
 	char line[line_size];
 	string result;
 
 	fp = popen(cmd.c_str(), "r");
-
 	fgets(line, line_size, fp);
-	string s = line;
-	s=s.erase(s.find('\n'));	//remove lewline char
+	output = line;
+	int st = pclose(fp); 
 
-	pclose(fp);
-	return s;
+	if(WIFEXITED(st)) 
+		exitcode=WEXITSTATUS(st);
+
+	if(exitcode != 0)
+		output="";
+	else
+		output=output.erase(output.find('\n'));	//remove lewline char
+
+	cout<<exitcode;
+	return exitcode;
 }
 
 /**
@@ -107,13 +115,19 @@ int get_file_size(string filename)
 float get_song_duration(string path)
 {
 	string cmd="soxi -D \""+path+"\"";
-	string s = get_process_output_line(cmd);
+	string s;
+	if(get_process_output_line(cmd,s) !=0 )		
+		return -1;		/**< make sure no valid duration is returned if the file does not exist/cannot be opened */
+
 	float sd = strtof((s).c_str(),0);
 	return sd;
 }
 
 int get_file_bs(int filesize,float fileduration)
 {
+	if(fileduration <= 0)
+		return 0;		/**< 0 is an invalid bs for dd and will cause the pipe to fail, skipping to the next song */
+
 	int bs = ((filesize/1000)/fileduration);
 	cout<<"FILE SIZE: "<<filesize<<" DURATION: "<<fileduration<<" BS: "<<bs<<endl;
 	return bs;

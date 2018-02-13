@@ -61,10 +61,13 @@ string trim_audio_track(string &path)
 
 void set_output(string &output)
 {
+	cout<<"setting audio output to "<<s.output<<endl;
 	if(s.output == "FM" || s.output == "fm")
 		return;
-	if(s.output == "ANALOG" || s.output == "analog")
+	if(s.output == "ANALOG" || s.output == "analog"){
+		cout<<"ANALOG"<<endl;
 		output="aplay";
+	}
 }
 
 int play_storage()
@@ -123,8 +126,10 @@ int play_storage()
 
 int play_bt(string device)
 {
+	string output="sudo /home/pi/PiFmRds/src/pi_fm_rds -ps 'BLUETOOTH' -rt 'A2DP BLUETOOTH' -freq "+s.freq+" -audio -";
+	set_output(output);			/**< change output device if specified */
 	
-	string cmdline="arecord -D bluealsa -f cd -c 2 | sox -t raw -v "+s.btGain+" -G -b 16 -e signed -c 2 -r 44100 - -t wav - | sudo /home/pi/PiFmRds/src/pi_fm_rds -ps 'BLUETOOTH' -rt 'A2DP BLUETOOTH' -freq "+s.freq+" -audio -";
+	string cmdline="arecord -D bluealsa -f cd -c 2 | sox -t raw -v "+s.btGain+" -G -b 16 -e signed -c 2 -r 44100 - -t wav - | "+output;
 
 	system(cmdline.c_str());
 	return 0;
