@@ -22,14 +22,14 @@ Exclusively tested on Minimal Raspbian (ARM)
 - ~~The first bluetooth connection after boot is known to fail after few seconds. All subsequent connections will work just fine.~~ 
 - Due to a design flaw in BCM43438 WIFI/BT chipset, you might need to disable WiFi if you experience BT audio stuttering on Pi Zero W and Pi 3: https://github.com/raspberrypi/linux/issues/1402
 
-# installation
+# Installation
 ` git clone https://github.com/morrolinux/mpradio.git mpradio-master `
 
 ` cd mpradio-master/install `
 
 ` sudo ./install.sh `
 
-# configuration
+# Configuration
 By default, mpradio will always be running automatically after boot once installed. No additional configuration is needed.
 However, you can change the FM streaming frequency (which is otherwise defaulted to 107.0) by placing a file named pirateradio.config in the root of a USB key (which of course, will need to stay plugged for the settings to be permanent)
 
@@ -51,7 +51,7 @@ updateInterval=3      	;seconds between RDS refresh. lower values could result i
 charsJump=6           	;how many characters should shift between updates [1-8]
 
 ```
-# usage
+# Usage
 It (should) work out of the box. You need your mp3 files to be on a FAT32 usb stick. (along with the config file if you need to override default settings)
 You can **safely** shut down the Pi by unplugging the stick and waiting for about 5 seconds until the status led stops blinking.
 If you enabled "persistentPlaylist" option, your Pi will never play the same song twice before consuming the full playlist.
@@ -61,9 +61,9 @@ If you add new songs on the usb stick, with "persistentPlaylist" enabled they wo
 - power on your Pi once again, with the usb key in it.
 - You're done! (mpradio will rebuild the playlist, counting the new files as well)
 
-Also, please remember that (although that would be probably illegal) you can test FM broadcasting by plugging a 20cm wire on the GPIO 4 of your Pi
+Also, please remember that (although that would be probably illegal) you can test FM broadcasting by plugging a 20cm wire on the **GPIO 4** of your Pi
 
-# update 
+# Update 
 ` rm -rf mpradio-master/ ` 
 and then:
 
@@ -73,7 +73,7 @@ OR, if you are a git guy:
 
 `cd mpradio-master && git fetch origin && git reset --hard origin/master && cd install && sudo ./install.sh`
 
-# uninstallation / removal
+# Uninstallation / Removal
 ` cd mpradio-master/install `
 ` ./install.sh remove `
 
