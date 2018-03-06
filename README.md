@@ -61,6 +61,8 @@ If you add new songs on the usb stick, with "persistentPlaylist" enabled they wo
 - power on your Pi once again, with the usb key in it.
 - You're done! (mpradio will rebuild the playlist, counting the new files as well)
 
+Also, please remember that (although that would be probably illegal) you can test FM broadcasting by plugging a 20cm wire on the GPIO 4 of your Pi
+
 # update 
 ` rm -rf mpradio-master/ ` 
 and then:
