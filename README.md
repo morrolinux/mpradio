@@ -12,6 +12,7 @@ Exclusively tested on Minimal Raspbian (ARM)
 - [x] skip to the next song by pressing a push-button (GPIO-connected on pin 18)
 - [x] safely shutdown by holding the push-button (GPIO-connected on pin 18)
 - [x] stream audio over FM or 3.5mm Jack 
+- [x] send mp3 files to the Pi via Bluetooth
 - [ ] Android app to edit settings via bluetooth? 
 - [ ] Bluetooth speaker via jack audio output?
 - [ ] Read metadata from the mp3 files 
