@@ -24,6 +24,9 @@ Exclusively tested on Minimal Raspbian (ARM)
 - Due to a design flaw in BCM43438 WIFI/BT chipset, you might need to disable WiFi if you experience BT audio stuttering on Pi Zero W and Pi 3: https://github.com/raspberrypi/linux/issues/1402
 
 # Installation
+
+Make sure your Raspbian is up to date:
+` sudp apt-get update && sudo apt-get full-upgrade `
 ` git clone https://github.com/morrolinux/mpradio.git mpradio-master `
 
 ` cd mpradio-master/install `
