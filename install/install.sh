@@ -123,7 +123,7 @@ fi
 FSTAB="/etc/fstab"
 fstabline=$(grep "pirateradio" $FSTAB -n|cut -d: -f1)
 if [[ $fstabline == "" ]]; then
-	echo "/dev/sda1    /pirateradio    vfat    defaults,ro,nofail 0   0" >> $FSTAB
+	echo "/dev/sda1    /pirateradio    vfat    defaults,rw,nofail 0   0" >> $FSTAB
 else
 	if [[ $remove ]]; then
 		sed -i.bak -e "${fstabline}d" $FSTAB
