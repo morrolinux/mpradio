@@ -21,7 +21,7 @@ else
 fi
 
 #Installing software dependencies...
-apt-get -y $INSTALL bluez pi-bluetooth python-gobject python-gobject-2 bluez-tools sox crudini libsox-fmt-mp3 python-dbus bluealsa
+apt-get -y $INSTALL bluez pi-bluetooth python-gobject python-gobject-2 bluez-tools sox crudini libsox-fmt-mp3 python-dbus bluealsa obexpushd
 apt-get -y remove pulseaudio
 
 #Installing software needed to compile PiFmRDS..
@@ -89,6 +89,9 @@ cp -f ../install/bt-setup.service /etc/systemd/system/bt-setup.service
 cp -f ../install/mpradio.service /etc/systemd/system/mpradio.service
 cp -f ../install/simple-agent.service /etc/systemd/system/simple-agent.service
 cp -f ../install/mpradio-pushbutton-skip.service /etc/systemd/system/mpradio-pushbutton-skip.service
+cp -f ../install/obexpushd.service /etc/systemd/system/obexpushd.service
+cp -f ../install/dbus-org.bluez.service /etc/systemd/system/dbus-org.bluez.service
+
 if [[ $remove ]]; then
 	systemctl disable mpradio.service
 	systemctl disable bluealsa.service
@@ -97,6 +100,7 @@ if [[ $remove ]]; then
 	systemctl disable need2recompile.service
 	systemctl disable mpradio-legacy-rds.service
 	systemctl disable mpradio-pushbutton-skip.service
+	systemctl disable obexpushd.service
 else
 	systemctl enable mpradio.service
 	systemctl enable bluealsa.service
@@ -105,6 +109,7 @@ else
 	systemctl enable need2recompile.service
 	systemctl enable mpradio-legacy-rds.service
 	systemctl enable mpradio-pushbutton-skip.service
+	systemctl enable obexpushd.service
 fi
 
 #Installing PiFmRDS...
