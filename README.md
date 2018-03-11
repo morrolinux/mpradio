@@ -25,8 +25,10 @@ Exclusively tested on Minimal Raspbian (ARM)
 
 # Installation
 
-Make sure your Raspbian is up to date:
+First make sure your Raspbian is up to date:
+
 ` sudp apt-get update && sudo apt-get full-upgrade `
+
 ` git clone https://github.com/morrolinux/mpradio.git mpradio-master `
 
 ` cd mpradio-master/install `
