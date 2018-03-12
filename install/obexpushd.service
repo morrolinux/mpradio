@@ -6,7 +6,7 @@ Before=mpradio.service
 [Service]
 Type=simple
 EnvironmentFile=/root/.profile
-ExecStart=/usr/bin/obexpushd -B -n -o /pirateradio/
+ExecStart=/usr/bin/obexpushd -B -n -o /pirateradio/ -s /bin/file_storage.sh -t FTP
 ExecReload=/bin/kill -HUP $MAINPID
 KillMode=control-group
 

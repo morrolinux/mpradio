@@ -91,6 +91,8 @@ cp -f ../install/simple-agent.service /etc/systemd/system/simple-agent.service
 cp -f ../install/mpradio-pushbutton-skip.service /etc/systemd/system/mpradio-pushbutton-skip.service
 cp -f ../install/obexpushd.service /etc/systemd/system/obexpushd.service
 cp -f ../install/dbus-org.bluez.service /etc/systemd/system/dbus-org.bluez.service
+cp -f ../install/file_storage.sh /bin/file_storage.sh
+chmod +x /bin/file_storage.sh
 
 if [[ $remove ]]; then
 	systemctl disable mpradio.service
