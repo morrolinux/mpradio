@@ -14,8 +14,7 @@ Exclusively tested on Minimal Raspbian (ARM)
 - [x] stream audio over FM or 3.5mm Jack 
 - [x] send mp3 files to the Pi via Bluetooth
 - [x] bluetooth OTA file management on the Pi with applications such as "Bluetooth Explorer Lite"
-- [ ] Android app to edit settings via bluetooth? 
-- [ ] Bluetooth speaker via jack audio output?
+- [x] Bluetooth speaker via jack audio output
 - [ ] Read metadata from the mp3 files 
 - [ ] Display Android notifications over RDS?
 
