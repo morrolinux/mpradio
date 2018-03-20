@@ -92,6 +92,7 @@ cp -f ../install/mpradio-pushbutton-skip.service /etc/systemd/system/mpradio-pus
 cp -f ../install/obexpushd.service /etc/systemd/system/obexpushd.service
 cp -f ../install/dbus-org.bluez.service /etc/systemd/system/dbus-org.bluez.service
 cp -f ../install/file_storage.sh /bin/file_storage.sh
+cp -f ../install/rfcomm.service /etc/systemd/system/rfcomm.service
 chmod +x /bin/file_storage.sh
 
 if [[ $remove ]]; then
@@ -139,5 +140,15 @@ fi
 
 usermod -a -G lp pi
 
-echo "Installation completed! Rebooting in 10 seconds..."
-sleep 10 && reboot
+# Edit /lib/systemd/system/bluetooth.service to enable BT services
+# Credits to Patrick Hundal, hacks.mozilla.org
+sudo sed -i: 's|^Exec.*toothd$| \
+ExecStart=/usr/lib/bluetooth/bluetoothd -C \
+ExecStartPost=/usr/bin/sdptool add SP \
+ExecStartPost=/bin/hciconfig hci0 piscan \
+|g' /lib/systemd/system/bluetooth.service
+
+echo PRETTY_HOSTNAME=raspberrypi > /etc/machine-info
+
+echo "Installation completed! Rebooting in 5 seconds..."
+sleep 5 && reboot
