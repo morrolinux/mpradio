@@ -27,7 +27,7 @@ Exclusively tested on Minimal Raspbian (ARM)
 
 First make sure your Raspbian is up to date:
 
-` sudo apt-get update && sudo apt-get full-upgrade && apt-get install git`
+` sudo apt-get update && sudo apt-get -y full-upgrade && apt-get install git`
 
 ` git clone https://github.com/morrolinux/mpradio.git mpradio-master `
 
