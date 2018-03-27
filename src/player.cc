@@ -73,6 +73,11 @@ void set_output(string &output)
 	}
 }
 
+void set_effects(string &sox_params)
+{
+	sox_params+="compand 0.3,1 6:-70,-60,-20 -5 -90 0.2";
+}
+
 int play_storage()
 {
 	bool repeat = true;
@@ -87,7 +92,8 @@ int play_storage()
 		int qsize=pqueue.size();
 	
 		string sox="sox -t "+s.format+" -v "+s.storageGain+" -r 48000 -G";
-		string sox_params="-t wav - compand 0.3,1 6:-70,-60,-20 -5 -90 0.2";
+		string sox_params="-t wav - ";
+		set_effects(sox_params);
 		string pifm1="/home/pi/PiFmRds/src/pi_fm_rds -ctl /home/pi/rds_ctl -ps";
 		string pifm2="-rt";
 		string pifm3="-audio - -freq";
@@ -129,10 +135,13 @@ int play_storage()
 
 int play_bt(string device)
 {
+	string sox_params="";
 	string output="sudo /home/pi/PiFmRds/src/pi_fm_rds -ps 'BLUETOOTH' -rt 'A2DP BLUETOOTH' -freq "+s.freq+" -audio -";
 	set_output(output);			/**< change output device if specified */
+	if(s.btBoost)
+		set_effects(sox_params);
 	
-	string cmdline="arecord -D bluealsa -f cd -c 2 | sox -t raw -v "+s.btGain+" -G -b 16 -e signed -c 2 -r 44100 - -t wav - | "+output;
+	string cmdline="arecord -D bluealsa -f cd -c 2 | sox -t raw -v "+s.btGain+" -G -b 16 -e signed -c 2 -r 44100 - -t wav - "+sox_params+" | "+output;
 
 	system(cmdline.c_str());
 	return 0;

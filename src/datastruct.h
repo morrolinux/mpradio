@@ -12,6 +12,7 @@ struct settings{
 	bool shuffle;
 	bool persistentPlaylist;
 	bool resumePlayback;
+	bool btBoost;
 	int rdsUpdateInterval;
 	int rdsCharsJump;
 };

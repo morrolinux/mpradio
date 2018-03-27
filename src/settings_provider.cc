@@ -14,6 +14,7 @@ constexpr auto DEFAULTFREQ = "107.0";
 constexpr auto DEFAULTGAIN = "1.3";
 constexpr auto DEFAULTBTGAIN = "1.7";
 constexpr auto DEFAULTOUTPUT = "fm";
+constexpr bool BTBOOST = true;
 constexpr int STRLEN = 40;
 
 settings s;
@@ -46,6 +47,7 @@ void getsettings()
 	s.format=FORMAT;
 
 	s.output=reader.Get("PIRATERADIO","output",DEFAULTOUTPUT);
+	s.btBoost=reader.GetBoolean("PIRATERADIO","btBoost",BTBOOST);
 
 	cout<<"freq: "<<s.freq<<endl<<"btGain: "<<s.btGain<<" storageGain: "<<s.storageGain \
 		<<endl<<"persistentPlaylist: "<<s.persistentPlaylist<<endl \
