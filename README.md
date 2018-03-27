@@ -4,30 +4,30 @@ Morrolinux's Pirate radio (PiFmRDS implementation with Bluetooth and mp3 support
 Exclusively tested on Minimal Raspbian (ARM)
 
 # Features
-- [x] safely shutdown your Pi by unplugging the USB stick
-- [x] persistent playlists (remember the playlist/playback status across reboots)
-- [x] resume track from its playback status hh:mm:ss
-- [x] shuffle on/off
-- [x] scrolling RDS to overcome 8-chars limitation 
-- [x] skip to the next song by pressing a push-button (GPIO-connected on pin 18)
-- [x] safely shutdown by holding the push-button (GPIO-connected on pin 18)
-- [x] stream audio over FM or 3.5mm Jack 
-- [x] send mp3 files to the Pi via Bluetooth
-- [x] bluetooth OTA file management on the Pi with applications such as "Bluetooth Explorer Lite"
-- [x] Bluetooth speaker via jack audio output
+- [x] Safely shutdown your Pi by unplugging the USB stick
+- [x] Persistent playlists (remember the playlist/playback status across reboots)
+- [x] Resume track from its playback status hh:mm:ss
+- [x] Shuffle on/off
+- [x] Scrolling RDS to overcome 8-chars limitation 
+- [x] Skip to the next song by pressing a push-button (GPIO-connected on pin 18)
+- [x] Safely shutdown by holding the push-button (GPIO-connected on pin 18)
+- [x] Stream audio over FM or 3.5mm Jack (Bluetooth speaker via jack audio output)
+- [x] Send mp3 files to the Pi via Bluetooth
+- [x] Bluetooth OTA file management on the Pi with applications such as "Bluetooth Explorer Lite"
 - [ ] Read metadata from the mp3 files 
 - [ ] Display Android notifications over RDS?
-
+- [ ] Bluetooth companion app (for android) 
+- [ ] Automatically partition the sdcard for a dedicated mp3 storage space (instead of using a USB drive)
 
 # Known issues
-- ~~The first bluetooth connection after boot is known to fail after few seconds. All subsequent connections will work just fine.~~ 
 - Due to a design flaw in BCM43438 WIFI/BT chipset, you might need to disable WiFi if you experience BT audio stuttering on Pi Zero W and Pi 3: https://github.com/raspberrypi/linux/issues/1402
+- Boot can take as long as 1:30 min on the Pi1 and 2 due to BT UART interface missing on the board. `sudo systemctl mask dev-serial1.device` should help 
 
 # Installation
 
 First make sure your Raspbian is up to date:
 
-` sudo apt-get update && sudo apt-get -y full-upgrade && apt-get install git`
+` sudo apt-get update && sudo apt-get -y full-upgrade && sudo apt-get install git`
 
 ` git clone https://github.com/morrolinux/mpradio.git mpradio-master `
 
@@ -78,8 +78,7 @@ OR, if you are a git guy:
 `cd mpradio-master && git fetch origin && git reset --hard origin/master && cd install && sudo ./install.sh`
 
 # Uninstallation / Removal
-` cd mpradio-master/install `
-` ./install.sh remove `
+` cd mpradio-master/install && sudo ./install.sh remove `
 
 # Debugging / Troubleshooting
 mpradio is launched as a service (via systemd) after boot completed
