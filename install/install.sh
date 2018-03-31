@@ -80,7 +80,7 @@ else
 	make
 fi
 
-${CP} mpradio /home/pi/mpradio
+${CP} mpradio /bin/mpradio
 
 #Installing service units...
 cp -f ../install/need2recompile.service /etc/systemd/system/need2recompile.service

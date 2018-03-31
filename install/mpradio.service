@@ -5,7 +5,7 @@ After=network.target auditd.service
 [Service]
 Type=idle
 EnvironmentFile=/home/pi/.profile
-ExecStart=/bin/bash -l -c '/home/pi/mpradio'
+ExecStart=/bin/bash -l -c '/bin/mpradio'
 ExecReload=/bin/kill -HUP $MAINPID
 KillMode=control-group
 

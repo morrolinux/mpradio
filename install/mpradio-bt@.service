@@ -5,6 +5,6 @@ Requires=bluetooth.service bluealsa.service
 Type=simple
 User=pi
 Group=lp
-ExecStart=/home/pi/mpradio %I
+ExecStart=/bin/mpradio %I
 [Install]
 WantedBy=multi-user.target
