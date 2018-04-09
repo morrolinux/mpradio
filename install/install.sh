@@ -57,8 +57,8 @@ ${CP} bt-setup.sh /bin/bt-setup.sh
 ${CP} mpradio-legacyRDS.sh /bin/mpradio-legacyRDS.sh
 ${CP} simple-agent /bin/simple-agent
 ${CP} 100-usb.rules /etc/udev/rules.d/100-usb.rules
-mkdir /pirateradio
-${CP} -f ../install/pirateradio.config /pirateradio/pirateradio.config
+mkdir -p /pirateradio
+${CP} ../install/pirateradio.config /pirateradio/pirateradio.config --backup --suffix=.bak
 
 mkdir -p /usr/lib/udev
 ${CP} bluetooth /usr/lib/udev/bluetooth
