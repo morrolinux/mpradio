@@ -6,7 +6,7 @@ JUMP=$(crudini --get /pirateradio/pirateradio.config RDS charsJump)
 sleep $INTERVAL
 
 getTitle(){
-	cat /home/pi/now_playing
+	[ -f /home/pi/now_playing ] && cat /home/pi/now_playing;
 }
 
 while true
