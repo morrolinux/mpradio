@@ -141,6 +141,8 @@ int play_bt(string device)
 	if(s.btBoost)
 		set_effects(sox_params);
 	
+	update_now_playing("Bluetooth");
+
 	string cmdline="arecord -D bluealsa -f cd -c 2 | sox -t raw -v "+s.btGain+" -G -b 16 -e signed -c 2 -r 44100 - -t wav - "+sox_params+" | "+output;
 
 	system(cmdline.c_str());
