@@ -148,8 +148,8 @@ void load_playback_status()
 	}
 }
 
-
-
+/*! \brief Update the ~/now_playing file to communicate metadata of current song. 
+ */
 void update_now_playing()
 {
 	ofstream playing;

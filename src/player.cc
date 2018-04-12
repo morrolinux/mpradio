@@ -82,6 +82,10 @@ void set_effects(string &sox_params)
 	sox_params+="compand 0.3,1 6:-70,-60,-20 -5 -90 0.2";
 }
 
+/*! \brief Read the contents of the ID3tag on the file at songpath
+ *         into playbackStatus ps, so that we can keep track of them.
+ * @param[in]  songpath String representing the full filepath of current song.
+ */
 void read_tag_to_status(string songpath)
 {
 	ID3_Tag tag(songpath.c_str());
