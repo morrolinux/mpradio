@@ -148,11 +148,17 @@ void load_playback_status()
 	}
 }
 
-void update_now_playing(string songname)
+
+
+void update_now_playing()
 {
 	ofstream playing;
 	playing.open("/home/pi/now_playing");
-	playing<<songname;
+	playing<<"SONG_NAME='"<<ps.songName<<"'\n"
+		   <<"SONG_YEAR='"<<ps.songYear<<"'\n"
+		   <<"ALBUM_NAME='"<<ps.songAlbum<<"'\n"
+		   <<"ARTIST_NAME='"<<ps.songArtist<<"'"
+		   <<endl;
 	playing.close();
 }
 

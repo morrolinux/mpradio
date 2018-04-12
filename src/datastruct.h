@@ -18,7 +18,11 @@ struct settings{
 };
 
 struct playbackStatus{
+	string songPath;
 	string songName;
+	string songArtist;
+	string songAlbum;
+	string songYear;
 	int songIndex=0;
 	int playbackPosition=0;
 	bool resumed=false;
