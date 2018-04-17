@@ -54,7 +54,7 @@ shuffle=true
 [RDS]
 updateInterval=3      				;seconds between RDS refresh. lower values could result in RDS being ignored by your radio receiver
 charsJump=6                             	;how many characters should shift between updates [1-8]
-rdsPattern=echo $ARTIST_NAME - $SONG_NAME 	;pattern which is passed to eval() to produce title
+rdsPattern=$ARTIST_NAME - $SONG_NAME	;Pattern which is passed to eval() to produce title EG: $SONG_YEAR - $ALBUM_NAME
 
 ```
 # Usage
