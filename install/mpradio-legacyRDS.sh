@@ -14,7 +14,7 @@ getTitle(){
 
 	# Now, pass PATTERN to eval() to compose the pattern together
 	# E.g.: "$ARTIST_NAME - $SONG_NAME" becomes "Stevie Wonder - Superstition"
-	eval $PATTERN
+	eval echo $PATTERN
 }
 
 while true
