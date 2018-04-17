@@ -13,8 +13,8 @@ getTitle(){
 	[ -f /home/pi/now_playing ] && source /home/pi/now_playing
 
 	# Now, pass PATTERN to eval() to compose the pattern together
-	# E.g.: '%s: %s!!!' "$ARTIST_NAME" "$SONG_NAME" becomes "Stevie Wonder: Superstition!!!"
-	eval printf $PATTERN
+	# E.g.: "$ARTIST_NAME - $SONG_NAME" becomes "Stevie Wonder - Superstition"
+	eval $PATTERN
 }
 
 while true
