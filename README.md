@@ -14,7 +14,7 @@ Exclusively tested on Minimal Raspbian (ARM)
 - [x] Stream audio over FM or 3.5mm Jack (Bluetooth speaker via jack audio output)
 - [x] Send mp3 files to the Pi via Bluetooth
 - [x] Bluetooth OTA file management on the Pi with applications such as "Bluetooth Explorer Lite"
-- [ ] Read metadata from the mp3 files 
+- [x] Read metadata from the mp3 files 
 - [ ] Display Android notifications over RDS?
 - [ ] Bluetooth companion app (for android) 
 - [ ] Automatically partition the sdcard for a dedicated mp3 storage space (instead of using a USB drive)
@@ -52,8 +52,9 @@ resumePlayback=true   	;require persistentPlaylist to be enabled
 shuffle=true 
 
 [RDS]
-updateInterval=3      	;seconds between RDS refresh. lower values could result in RDS being ignored by your radio receiver
-charsJump=6           	;how many characters should shift between updates [1-8]
+updateInterval=3      				;seconds between RDS refresh. lower values could result in RDS being ignored by your radio receiver
+charsJump=6                             	;how many characters should shift between updates [1-8]
+rdsPattern=echo $ARTIST_NAME - $SONG_NAME 	;pattern which is passed to eval() to produce title
 
 ```
 # Usage

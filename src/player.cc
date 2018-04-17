@@ -3,9 +3,13 @@
 #include <list>
 #include <thread>
 #include <sys/stat.h>
+#include <id3/tag.h>
+#include <id3/misc_support.h>
 using namespace std;
 #include "datastruct.h"
 #include "files.h"
+
+#define SAFE_NULL(X) (NULL == X ? "" : X)
 
 constexpr auto RDS_CTL= "/home/pi/rds_ctl";
 
@@ -78,6 +82,27 @@ void set_effects(string &sox_params)
 	sox_params+="compand 0.3,1 6:-70,-60,-20 -5 -90 0.2";
 }
 
+/*! \brief Read the contents of the ID3tag on the file at songpath
+ *         into playbackStatus ps, so that we can keep track of them.
+ * @param[in]  songpath String representing the full filepath of current song.
+ */
+void read_tag_to_status(string songpath)
+{
+	ID3_Tag tag(songpath.c_str());
+	
+	ps.songPath = songpath;
+	ps.songName = SAFE_NULL(ID3_GetTitle( &tag ));
+	ps.songArtist = SAFE_NULL(ID3_GetArtist( &tag ));
+	ps.songAlbum = SAFE_NULL(ID3_GetAlbum( &tag ));
+	ps.songYear = SAFE_NULL(ID3_GetYear( &tag ));
+
+	if(ps.songName.empty()) {
+		size_t found = songpath.find_last_of("/");	/**< extract song name out of the absolute file path */
+		string songname=songpath.substr(found+1);
+		ps.songName=songname;			
+	}
+}
+
 int play_storage()
 {
 	bool repeat = true;
@@ -109,18 +134,17 @@ int play_storage()
 			advance (it,ps.songIndex);
 			songpath=*it;
 
-			size_t found = songpath.find_last_of("/");	/**< extract song name out of the absolute file path */
-	  		string songname=songpath.substr(found+1);
-			ps.songName=songname;
 			cout<<endl<<"PLAY: "<<songpath<<endl;
-	
-			sox=trim_audio_track(songpath)+sox;		/**< substitute songname with stdin (-) from dd if playback must be resumed */
-			output=pifm1+" "+"\""+songname+"\""+" "+pifm2+" "+"\""+songname+"\""+" "+pifm3+" "+s.freq;
+
+			read_tag_to_status(songpath);
+			
+			sox=trim_audio_track(songpath)+sox;		/**< substitute ps.songName with stdin (-) from dd if playback must be resumed */
+			output=pifm1+" "+"\""+ps.songName+"\""+" "+pifm2+" "+"\""+ps.songName+"\""+" "+pifm3+" "+s.freq;
 			set_output(output);			/**< change output device if specified */
 	
 			string cmdline=sox+" "+songpath+" "+sox_params+" | "+output;
 	
-			update_now_playing(songname);
+			update_now_playing();
 
 			system(cmdline.c_str());
 
@@ -140,8 +164,9 @@ int play_bt(string device)
 	set_output(output);			/**< change output device if specified */
 	if(s.btBoost)
 		set_effects(sox_params);
-	
-	update_now_playing("Bluetooth");
+
+	ps.songName = "Bluetooth";
+	update_now_playing();
 
 	string cmdline="arecord -D bluealsa -f cd -c 2 | sox -t raw -v "+s.btGain+" -G -b 16 -e signed -c 2 -r 44100 - -t wav - "+sox_params+" | "+output;
 

@@ -2,7 +2,7 @@ OBJ = mpradio.o player.o settings_provider.o files.o libs/inih/ini.o libs/inih/c
 CXXFLAGS=-Wall 
 
 mpradio: $(OBJ)
-	g++ -pthread -o mpradio $(OBJ)
+	g++ -pthread -o mpradio $(OBJ) -lid3
 
 -include dependencies
 

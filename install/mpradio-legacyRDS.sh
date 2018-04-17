@@ -2,19 +2,27 @@
 
 INTERVAL=$(crudini --get /pirateradio/pirateradio.config RDS updateInterval)
 JUMP=$(crudini --get /pirateradio/pirateradio.config RDS charsJump)
+PATTERN=$(crudini --get /pirateradio/pirateradio.config RDS rdsPattern)
 
 sleep $INTERVAL
 
 getTitle(){
-	[ -f /home/pi/now_playing ] && cat /home/pi/now_playing;
+
+	# Verify now_playing exists before sourcing it
+	# By sourcing it, we catch variables set by update_now_playing().
+	[ -f /home/pi/now_playing ] && source /home/pi/now_playing
+
+	# Now, pass PATTERN to eval() to compose the pattern together
+	# E.g.: "$ARTIST_NAME - $SONG_NAME" becomes "Stevie Wonder - Superstition"
+	eval echo $PATTERN
 }
 
 while true
 do
 	title=$(getTitle)
 	echo $title
-        title_lenght=$(echo $title|wc -c)
-	finish=$((title_lenght+JUMP)) 
+        title_length=$(echo $title|wc -c)
+	finish=$((title_length+JUMP)) 
 
         for i in $(seq 9 $JUMP $finish);
         do
