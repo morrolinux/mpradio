@@ -157,5 +157,5 @@ ExecStartPost=/bin/hciconfig hci0 piscan \
 
 echo PRETTY_HOSTNAME=raspberrypi > /etc/machine-info
 
-echo "Installation completed! Rebooting in 5 seconds..."
+echo "Completed! Rebooting in 5 seconds..."
 sleep 5 && reboot
