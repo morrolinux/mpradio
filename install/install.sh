@@ -7,11 +7,13 @@ fi
 
 if [[ $1 == "remove" ]] ; then 
 	remove="all"
+elif [[ $1 == "uninstall" ]] ; then
+	remove="some"
 else
 	remove=""
 fi
 
-if [[ $remove ]] ; then 
+if [[ $remove ]] ; then
 	INSTALL="remove"
 	# N.b. this does not handle directories.
 	# This is good, since `sudo rm -rf` is almost never a good thing to run, ever
@@ -22,12 +24,14 @@ else
 	handle() { cp -f $@ ; }
 fi
 
-#Installing software dependencies...
-apt-get -y $INSTALL bluez pi-bluetooth python-gobject python-gobject-2 bluez-tools sox crudini libsox-fmt-mp3 python-dbus bluealsa obexpushd libid3-dev
-apt-get -y remove pulseaudio
-
-#Installing software needed to compile PiFmRDS..
-apt-get -y $INSTALL git libsndfile1-dev
+if [[ $remove != "some" ]]; then
+	#Installing software dependencies...
+	apt-get -y $INSTALL bluez pi-bluetooth python-gobject python-gobject-2 bluez-tools sox crudini libsox-fmt-mp3 python-dbus bluealsa obexpushd libid3-dev
+	apt-get -y remove pulseaudio
+	
+	#Installing software needed to compile PiFmRDS..
+	apt-get -y $INSTALL git libsndfile1-dev
+fi
 
 #Setting rules...
 BLACKLIST="/etc/modprobe.d/blacklist.conf"
@@ -107,7 +111,7 @@ handle ../install/dbus-org.bluez.service /etc/systemd/system/dbus-org.bluez.serv
 handle ../install/file_storage.sh /bin/file_storage.sh
 handle ../install/rfcomm.service /etc/systemd/system/rfcomm.service
 
-if [[ $remove == "" ]]; then
+if [[ ! $remove ]]; then
 	chmod +x /bin/file_storage.sh
 	systemctl enable mpradio.service
 	systemctl enable bluealsa.service
