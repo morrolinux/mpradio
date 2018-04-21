@@ -18,7 +18,7 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 if [[ $1 == "update" ]] ; then
-	update_script()
+	update_script
 elif [[ $1 == "remove" ]] ; then
 	remove="all"
 elif [[ $1 == "uninstall" ]] ; then
