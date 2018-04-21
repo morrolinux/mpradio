@@ -16,7 +16,7 @@ then
 	killall sox
 	killall PiFmRDS
 
-	cd /home/pi/PiFmRds/src/
+	cd /usr/local/src/PiFmRds/src/
 	make clean
 	make
 
