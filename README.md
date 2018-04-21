@@ -69,11 +69,9 @@ If you add new songs on the USB stick, with "persistentPlaylist" enabled they wo
 Also, please remember that (though it would be probably illegal) you can test FM broadcasting by plugging a 20cm wire on the **GPIO 4** of your Pi.
 
 # Updating 
-` rm -rf mpradio-master/ ` 
+` cd mpradio-master/install && sudo ./install.sh update `
 
-Then, re-run the installation steps.
-
-OR, if you are a git guy:
+Or, if you prefer to be explicit:
 
 `cd mpradio-master && git fetch origin && git reset --hard origin/master && cd install && sudo ./install.sh`
 
