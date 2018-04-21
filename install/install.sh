@@ -19,7 +19,7 @@ fi
 
 if [[ $1 == "update" ]] ; then
 	update_script()
-elif [[ $1 == "remove" ]] ; then 
+elif [[ $1 == "remove" ]] ; then
 	remove="all"
 elif [[ $1 == "uninstall" ]] ; then
 	remove="some"
