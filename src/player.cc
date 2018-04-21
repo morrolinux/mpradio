@@ -119,7 +119,7 @@ int play_storage()
 		string sox="sox -t "+s.format+" -v "+s.storageGain+" -r 48000 -G";
 		string sox_params="-t wav - ";
 		set_effects(sox_params);
-		string pifm1="/usr/local/src/PiFmRds/src/pi_fm_rds -ctl /home/pi/rds_ctl -ps";
+		string pifm1="/usr/local/bin/pi_fm_rds -ctl /home/pi/rds_ctl -ps";
 		string pifm2="-rt";
 		string pifm3="-audio - -freq";
 		string output="";
@@ -160,7 +160,7 @@ int play_storage()
 int play_bt(string device)
 {
 	string sox_params="";
-	string output="sudo /usr/local/src/PiFmRds/src/pi_fm_rds -ps 'BLUETOOTH' -rt 'A2DP BLUETOOTH' -freq "+s.freq+" -audio -";
+	string output="sudo /usr/local/bin/pi_fm_rds -ps 'BLUETOOTH' -rt 'A2DP BLUETOOTH' -freq "+s.freq+" -audio -";
 	set_output(output);			/**< change output device if specified */
 	if(s.btBoost)
 		set_effects(sox_params);

@@ -134,6 +134,8 @@ else
 	make
 fi
 
+handle /usr/local/src/PiFmRds/src/pi_fm_rds /usr/local/bin/pi_fm_rds
+
 #Final configuration and perms...
 FSTAB="/etc/fstab"
 fstabline=$(grep "pirateradio" $FSTAB -n|cut -d: -f1)
