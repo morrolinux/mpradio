@@ -7,17 +7,19 @@ fi
 
 if [[ $1 == "remove" ]] ; then 
 	remove="all"
-else 
+else
 	remove=""
 fi
 
 if [[ $remove ]] ; then 
 	INSTALL="remove"
-	CP="rm -f"
+	# N.b. this does not handle directories.
+	# This is good, since `sudo rm -rf` is almost never a good thing to run, ever
+	handle() { rm -f $2 ; }
 	systemctl stop mpradio
 else
 	INSTALL="install"
-	CP="cp -f"
+	handle() { cp -f $@ ; }
 fi
 
 #Installing software dependencies...
@@ -50,22 +52,22 @@ else
 fi
 
 #Installing needed files and configurations
-${CP} mpradio-pushbutton-skip.py /bin/mpradio-pushbutton-skip.py
-${CP} need2recompile.sh /bin/need2recompile.sh
-${CP} mpshutdown.sh /sbin/mpshutdown.sh && chmod +x /sbin/mpshutdown.sh
-${CP} bt-setup.sh /bin/bt-setup.sh
-${CP} mpradio-legacyRDS.sh /bin/mpradio-legacyRDS.sh
-${CP} simple-agent /bin/simple-agent
-${CP} 100-usb.rules /etc/udev/rules.d/100-usb.rules
+handle mpradio-pushbutton-skip.py /bin/mpradio-pushbutton-skip.py
+handle need2recompile.sh /bin/need2recompile.sh
+handle mpshutdown.sh /sbin/mpshutdown.sh && chmod +x /sbin/mpshutdown.sh
+handle bt-setup.sh /bin/bt-setup.sh
+handle mpradio-legacyRDS.sh /bin/mpradio-legacyRDS.sh
+handle simple-agent /bin/simple-agent
+handle 100-usb.rules /etc/udev/rules.d/100-usb.rules
 mkdir -p /pirateradio
-${CP} ../install/pirateradio.config /pirateradio/pirateradio.config --backup --suffix=.bak
+handle ../install/pirateradio.config /pirateradio/pirateradio.config --backup --suffix=.bak
 
 mkdir -p /usr/lib/udev
-${CP} bluetooth /usr/lib/udev/bluetooth
-${CP} audio.conf /etc/bluetooth/audio.conf
-${CP} main.conf /etc/bluetooth/main.conf
-${CP} asoundrc /home/pi/.asoundrc
-${CP} mpradio-bt@.service /lib/systemd/system/mpradio-bt@.service
+handle bluetooth /usr/lib/udev/bluetooth
+handle audio.conf /etc/bluetooth/audio.conf
+handle main.conf /etc/bluetooth/main.conf
+handle asoundrc /home/pi/.asoundrc
+handle mpradio-bt@.service /lib/systemd/system/mpradio-bt@.service
 
 #compile and $INSTALL mpradio_cc
 if [[ $remove ]]; then
@@ -80,20 +82,7 @@ else
 	make
 fi
 
-${CP} mpradio /bin/mpradio
-
-#Installing service units...
-cp -f ../install/need2recompile.service /etc/systemd/system/need2recompile.service
-cp -f ../install/mpradio-legacy-rds.service /etc/systemd/system/mpradio-legacy-rds.service
-cp -f ../install/bt-setup.service /etc/systemd/system/bt-setup.service
-cp -f ../install/mpradio.service /etc/systemd/system/mpradio.service
-cp -f ../install/simple-agent.service /etc/systemd/system/simple-agent.service
-cp -f ../install/mpradio-pushbutton-skip.service /etc/systemd/system/mpradio-pushbutton-skip.service
-cp -f ../install/obexpushd.service /etc/systemd/system/obexpushd.service
-cp -f ../install/dbus-org.bluez.service /etc/systemd/system/dbus-org.bluez.service
-cp -f ../install/file_storage.sh /bin/file_storage.sh
-cp -f ../install/rfcomm.service /etc/systemd/system/rfcomm.service
-chmod +x /bin/file_storage.sh
+handle mpradio /bin/mpradio
 
 if [[ $remove ]]; then
 	systemctl disable mpradio.service
@@ -104,7 +93,22 @@ if [[ $remove ]]; then
 	systemctl disable mpradio-legacy-rds.service
 	systemctl disable mpradio-pushbutton-skip.service
 	systemctl disable obexpushd.service
-else
+fi
+
+#Installing service units, or uninstalling them.
+handle ../install/need2recompile.service /etc/systemd/system/need2recompile.service
+handle ../install/mpradio-legacy-rds.service /etc/systemd/system/mpradio-legacy-rds.service
+handle ../install/bt-setup.service /etc/systemd/system/bt-setup.service
+handle ../install/mpradio.service /etc/systemd/system/mpradio.service
+handle ../install/simple-agent.service /etc/systemd/system/simple-agent.service
+handle ../install/mpradio-pushbutton-skip.service /etc/systemd/system/mpradio-pushbutton-skip.service
+handle ../install/obexpushd.service /etc/systemd/system/obexpushd.service
+handle ../install/dbus-org.bluez.service /etc/systemd/system/dbus-org.bluez.service
+handle ../install/file_storage.sh /bin/file_storage.sh
+handle ../install/rfcomm.service /etc/systemd/system/rfcomm.service
+
+if [[ $remove == "" ]]; then
+	chmod +x /bin/file_storage.sh
 	systemctl enable mpradio.service
 	systemctl enable bluealsa.service
 	systemctl enable simple-agent.service
