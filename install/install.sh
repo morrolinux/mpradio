@@ -58,7 +58,7 @@ fi
 #Installing needed files and configurations
 handle mpradio-pushbutton-skip.py /bin/mpradio-pushbutton-skip.py
 handle need2recompile.sh /bin/need2recompile.sh
-handle mpshutdown.sh /sbin/mpshutdown.sh && chmod +x /sbin/mpshutdown.sh
+handle mpshutdown.sh /sbin/mpshutdown.sh
 handle bt-setup.sh /bin/bt-setup.sh
 handle mpradio-legacyRDS.sh /bin/mpradio-legacyRDS.sh
 handle simple-agent /bin/simple-agent
@@ -112,7 +112,6 @@ handle ../install/file_storage.sh /bin/file_storage.sh
 handle ../install/rfcomm.service /etc/systemd/system/rfcomm.service
 
 if [[ ! $remove ]]; then
-	chmod +x /bin/file_storage.sh
 	systemctl enable mpradio.service
 	systemctl enable bluealsa.service
 	systemctl enable simple-agent.service
