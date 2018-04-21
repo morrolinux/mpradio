@@ -16,9 +16,11 @@ then
 	killall sox
 	killall PiFmRDS
 
-	cd /home/pi/PiFmRds/src/
+	cd /usr/local/src/PiFmRds/src/
 	make clean
 	make
 
+	cp /usr/local/src/PiFmRds/src/pi_fm_rds /usr/local/bin/pi_fm_rds
+	
 	reboot
 fi

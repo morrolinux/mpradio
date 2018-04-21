@@ -7,65 +7,71 @@ fi
 
 if [[ $1 == "remove" ]] ; then 
 	remove="all"
-else 
+elif [[ $1 == "uninstall" ]] ; then
+	remove="some"
+else
 	remove=""
 fi
 
-if [[ $remove ]] ; then 
+if [[ $remove ]] ; then
 	INSTALL="remove"
-	CP="rm -f"
+	# N.b. this does not handle directories.
+	# This is good, since `sudo rm -rf` is almost never a good thing to run, ever
+	handle() { rm -f $2 ; }
 	systemctl stop mpradio
 else
 	INSTALL="install"
-	CP="cp -f"
+	handle() { cp -f $@ ; }
 fi
 
-#Installing software dependencies...
-apt-get -y $INSTALL bluez pi-bluetooth python-gobject python-gobject-2 bluez-tools sox crudini libsox-fmt-mp3 python-dbus bluealsa obexpushd libid3-dev
-apt-get -y remove pulseaudio
-
-#Installing software needed to compile PiFmRDS..
-apt-get -y $INSTALL git libsndfile1-dev
+if [[ $remove != "some" ]]; then
+	#Installing software dependencies...
+	apt-get -y $INSTALL bluez pi-bluetooth python-gobject python-gobject-2 bluez-tools sox crudini libsox-fmt-mp3 python-dbus bluealsa obexpushd libid3-dev
+	apt-get -y remove pulseaudio
+	
+	#Installing software needed to compile PiFmRDS..
+	apt-get -y $INSTALL git libsndfile1-dev
+fi
 
 #Setting rules...
 BLACKLIST="/etc/modprobe.d/blacklist.conf"
-blacklistline=$(grep "blacklist snd_bcm2835" $BLACKLIST -n|cut -d: -f1)
-if [[ $blacklistline == "" ]]; then
+blacklistline="# Blacklist ipv6 for mpradio"
+#No need to check first - we'll just remove blacklists starting with comment we added.
+#$(grep "blacklist snd_bcm2835" $BLACKLIST -n|cut -d: -f1)
+if [[ ! $remove ]]; then
 	#echo "blacklist snd_bcm2835" >> $BLACKLIST	#no need to blacklist since pulseaudio removal
-	echo "blacklist ipv6" >> $BLACKLIST
+	echo "$blacklistline" >> "$BLACKLIST"
+	echo "blacklist ipv6" >> "$BLACKLIST"
 else
-	if [[ $remove ]]; then
-		sed -i.bak -e "${blacklistline}d" $BLACKLIST
-	fi
+	# Remove all instances starting with comment line
+	sed -i.bak "/${blacklistline}/,+1 d" "$BLACKLIST"
 fi
 
 INPUT="/etc/udev/rules.d/99-input.rules"
-inputline=$(grep "bluetooth" $INPUT -n|cut -d: -f1)
+inputline=$(grep "bluetooth" "$INPUT" -n|cut -d: -f1)
 if [[ $inputline == "" ]]; then
-	echo "KERNEL==\"input[0-9]*\", RUN+=\"/usr/lib/udev/bluetooth\"" >> $INPUT
-else
-	if [[ $remove ]]; then
-		sed -i.bak -e "${inputline}d" $INPUT
-	fi
+	echo "KERNEL==\"input[0-9]*\", RUN+=\"/usr/lib/udev/bluetooth\"" >> "$INPUT"
+elif [[ $remove ]]; then
+	sed -i.bak -e "${inputline}d" "$INPUT"
 fi
 
 #Installing needed files and configurations
-${CP} mpradio-pushbutton-skip.py /bin/mpradio-pushbutton-skip.py
-${CP} need2recompile.sh /bin/need2recompile.sh
-${CP} mpshutdown.sh /sbin/mpshutdown.sh && chmod +x /sbin/mpshutdown.sh
-${CP} bt-setup.sh /bin/bt-setup.sh
-${CP} mpradio-legacyRDS.sh /bin/mpradio-legacyRDS.sh
-${CP} simple-agent /bin/simple-agent
-${CP} 100-usb.rules /etc/udev/rules.d/100-usb.rules
+handle mpradio-pushbutton-skip.py /bin/mpradio-pushbutton-skip.py
+handle need2recompile.sh /bin/need2recompile.sh
+handle mpshutdown.sh /sbin/mpshutdown.sh
+handle bt-setup.sh /bin/bt-setup.sh
+handle mpradio-legacyRDS.sh /bin/mpradio-legacyRDS.sh
+handle simple-agent /bin/simple-agent
+handle 100-usb.rules /etc/udev/rules.d/100-usb.rules
 mkdir -p /pirateradio
-${CP} ../install/pirateradio.config /pirateradio/pirateradio.config --backup --suffix=.bak
+handle ../install/pirateradio.config /pirateradio/pirateradio.config --backup --suffix=.bak
 
 mkdir -p /usr/lib/udev
-${CP} bluetooth /usr/lib/udev/bluetooth
-${CP} audio.conf /etc/bluetooth/audio.conf
-${CP} main.conf /etc/bluetooth/main.conf
-${CP} asoundrc /home/pi/.asoundrc
-${CP} mpradio-bt@.service /lib/systemd/system/mpradio-bt@.service
+handle bluetooth /usr/lib/udev/bluetooth
+handle audio.conf /etc/bluetooth/audio.conf
+handle main.conf /etc/bluetooth/main.conf
+handle asoundrc /home/pi/.asoundrc
+handle mpradio-bt@.service /lib/systemd/system/mpradio-bt@.service
 
 #compile and $INSTALL mpradio_cc
 if [[ $remove ]]; then
@@ -80,20 +86,7 @@ else
 	make
 fi
 
-${CP} mpradio /bin/mpradio
-
-#Installing service units...
-cp -f ../install/need2recompile.service /etc/systemd/system/need2recompile.service
-cp -f ../install/mpradio-legacy-rds.service /etc/systemd/system/mpradio-legacy-rds.service
-cp -f ../install/bt-setup.service /etc/systemd/system/bt-setup.service
-cp -f ../install/mpradio.service /etc/systemd/system/mpradio.service
-cp -f ../install/simple-agent.service /etc/systemd/system/simple-agent.service
-cp -f ../install/mpradio-pushbutton-skip.service /etc/systemd/system/mpradio-pushbutton-skip.service
-cp -f ../install/obexpushd.service /etc/systemd/system/obexpushd.service
-cp -f ../install/dbus-org.bluez.service /etc/systemd/system/dbus-org.bluez.service
-cp -f ../install/file_storage.sh /bin/file_storage.sh
-cp -f ../install/rfcomm.service /etc/systemd/system/rfcomm.service
-chmod +x /bin/file_storage.sh
+handle mpradio /bin/mpradio
 
 if [[ $remove ]]; then
 	systemctl disable mpradio.service
@@ -104,7 +97,21 @@ if [[ $remove ]]; then
 	systemctl disable mpradio-legacy-rds.service
 	systemctl disable mpradio-pushbutton-skip.service
 	systemctl disable obexpushd.service
-else
+fi
+
+#Installing service units, or uninstalling them.
+handle ../install/need2recompile.service /etc/systemd/system/need2recompile.service
+handle ../install/mpradio-legacy-rds.service /etc/systemd/system/mpradio-legacy-rds.service
+handle ../install/bt-setup.service /etc/systemd/system/bt-setup.service
+handle ../install/mpradio.service /etc/systemd/system/mpradio.service
+handle ../install/simple-agent.service /etc/systemd/system/simple-agent.service
+handle ../install/mpradio-pushbutton-skip.service /etc/systemd/system/mpradio-pushbutton-skip.service
+handle ../install/obexpushd.service /etc/systemd/system/obexpushd.service
+handle ../install/dbus-org.bluez.service /etc/systemd/system/dbus-org.bluez.service
+handle ../install/file_storage.sh /bin/file_storage.sh
+handle ../install/rfcomm.service /etc/systemd/system/rfcomm.service
+
+if [[ ! $remove ]]; then
 	systemctl enable mpradio.service
 	systemctl enable bluealsa.service
 	systemctl enable simple-agent.service
@@ -120,12 +127,14 @@ fi
 if [[ $remove ]]; then
 	echo "not compiling before uninstall"
 else
-	cd /home/pi/
-	git clone https://github.com/ChristopheJacquet/PiFmRds.git
+	cd /usr/local/src/
+	git clone https://github.com/ChristopheJacquet/PiFmRds.git 
 	cd PiFmRds/src
 	make clean
 	make
 fi
+
+handle /usr/local/src/PiFmRds/src/pi_fm_rds /usr/local/bin/pi_fm_rds
 
 #Final configuration and perms...
 FSTAB="/etc/fstab"
@@ -150,5 +159,5 @@ ExecStartPost=/bin/hciconfig hci0 piscan \
 
 echo PRETTY_HOSTNAME=raspberrypi > /etc/machine-info
 
-echo "Installation completed! Rebooting in 5 seconds..."
+echo "Completed! Rebooting in 5 seconds..."
 sleep 5 && reboot

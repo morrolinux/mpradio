@@ -80,7 +80,12 @@ OR, if you are a git guy:
 `cd mpradio-master && git fetch origin && git reset --hard origin/master && cd install && sudo ./install.sh`
 
 # Uninstallation / Removal
+In order to remove mpradio along with the packages that come with it:
 ` cd mpradio-master/install && sudo ./install.sh remove `
+
+This has the effect of removing dependency packages whether or not you still want them. If you would like to keep the packages that mpradio depends on, run the following instead:
+
+` cd mpradio-master/install && sudo ./install.sh uninstall `
 
 # Debugging / Troubleshooting
 mpradio is launched as a service (via systemd) after boot completed
