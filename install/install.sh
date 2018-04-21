@@ -31,24 +31,24 @@ apt-get -y $INSTALL git libsndfile1-dev
 
 #Setting rules...
 BLACKLIST="/etc/modprobe.d/blacklist.conf"
-blacklistline=$(grep "blacklist snd_bcm2835" $BLACKLIST -n|cut -d: -f1)
-if [[ $blacklistline == "" ]]; then
+blacklistline="# Blacklist ipv6 for mpradio"
+#No need to check first - we'll just remove blacklists starting with comment we added.
+#$(grep "blacklist snd_bcm2835" $BLACKLIST -n|cut -d: -f1)
+if [[ ! $remove ]]; then
 	#echo "blacklist snd_bcm2835" >> $BLACKLIST	#no need to blacklist since pulseaudio removal
-	echo "blacklist ipv6" >> $BLACKLIST
+	echo "$blacklistline" >> "$BLACKLIST"
+	echo "blacklist ipv6" >> "$BLACKLIST"
 else
-	if [[ $remove ]]; then
-		sed -i.bak -e "${blacklistline}d" $BLACKLIST
-	fi
+	# Remove all instances starting with comment line
+	sed -i.bak "/${blacklistline}/,+1 d" "$BLACKLIST"
 fi
 
 INPUT="/etc/udev/rules.d/99-input.rules"
-inputline=$(grep "bluetooth" $INPUT -n|cut -d: -f1)
+inputline=$(grep "bluetooth" "$INPUT" -n|cut -d: -f1)
 if [[ $inputline == "" ]]; then
-	echo "KERNEL==\"input[0-9]*\", RUN+=\"/usr/lib/udev/bluetooth\"" >> $INPUT
-else
-	if [[ $remove ]]; then
-		sed -i.bak -e "${inputline}d" $INPUT
-	fi
+	echo "KERNEL==\"input[0-9]*\", RUN+=\"/usr/lib/udev/bluetooth\"" >> "$INPUT"
+elif [[ $remove ]]; then
+	sed -i.bak -e "${inputline}d" "$INPUT"
 fi
 
 #Installing needed files and configurations
