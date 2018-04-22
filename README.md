@@ -65,9 +65,9 @@ rdsPattern=$ARTIST_NAME - $SONG_NAME	;Pattern which is passed to eval() to produ
 Optional: Protect your SD card from corruption setting Read-Only mode
 use utility/roswitch.sh as follows:
 
-`roswitch.sh` ro to enable read-ony (effective from next boot)
+`roswitch.sh ro` to enable read-ony (effective from next boot)
 
-`roswitch.sh` rw to disable read-only (effective immediately)
+`roswitch.sh rw` to disable read-only (effective immediately)
 
 # Usage
 It (should) work out of the box. You need your mp3 files to be on a FAT32 usb stick. (along with the config file if you need to override default settings)
