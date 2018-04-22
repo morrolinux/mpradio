@@ -10,9 +10,9 @@ then
         sudo sed -i.bak '/^PARTUUID/ s/defaults/defaults,ro/' /etc/fstab
         sudo sed -i.bak 's/rootwait *$/rootwait noswap ro/' /boot/cmdline.txt
 
-        if [[ $(grep "var" /etc/fstab) == "" ]]
+        if [[ $(sudo grep "var" /etc/fstab) == "" ]]
         then
-                echo "tmpfs /var tmpfs noatime 0 0" >> /etc/fstab
+                sudo echo "tmpfs /var tmpfs noatime 0 0" >> /etc/fstab
         fi
 
         echo "You need to reboot to make this effective."
@@ -23,6 +23,6 @@ then
         sudo sed -i.bak '/^PARTUUID/ s/defaults,ro/defaults/' /etc/fstab
         sudo sed -i.bak 's/rootwait noswap ro*$/rootwait/' /boot/cmdline.txt
         sudo umount -l /var/
-	sed -i '/tmpfs \/var tmpfs noatime 0 0/d' /etc/fstab
+	sudo sed -i '/tmpfs \/var tmpfs noatime 0 0/d' /etc/fstab
         echo "RW effective now!"
 fi
