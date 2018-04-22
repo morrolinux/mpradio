@@ -49,6 +49,7 @@ btGain=1.7            	;gain setting for bluetooth streaming
 storageGain=1.3       	;gain setting for stored files streaming
 output=fm		;[analog/fm] to stream thru FM or 3.5mm jack 
 btBoost=true		;Enhance Bluetooth audio. This might add a little latency
+implementation=pi_fm_rds	;[pi_fm_rds/pi_fm_adv] - pi_fm_adv (experimental) has a much cleaner sound but it's quite unstable
 
 [PLAYLIST]
 persistentPlaylist=true
