@@ -132,9 +132,18 @@ else
 	cd PiFmRds/src
 	make clean
 	make
+
+	cd /usr/local/src/
+	git clone https://github.com/Miegl/PiFmAdv.git
+	cd PiFmAdv/src
+	make clean
+	make
+
+	
 fi
 
 handle /usr/local/src/PiFmRds/src/pi_fm_rds /usr/local/bin/pi_fm_rds
+handle /usr/local/src/PiFmAdv/src/pi_fm_adv /usr/local/bin/pi_fm_adv
 
 #Final configuration and perms...
 FSTAB="/etc/fstab"
