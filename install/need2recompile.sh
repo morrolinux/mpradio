@@ -20,7 +20,12 @@ then
 	make clean
 	make
 
+	cd /usr/local/src/PiFmAdv/src/
+	make clean
+	make
+
 	cp /usr/local/src/PiFmRds/src/pi_fm_rds /usr/local/bin/pi_fm_rds
+	cp /usr/local/src/PiFmAdv/src/pi_fm_adv /usr/local/bin/pi_fm_adv
 	
 	reboot
 fi
