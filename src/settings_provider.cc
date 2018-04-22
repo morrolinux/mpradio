@@ -50,9 +50,17 @@ void getsettings()
 	s.output=reader.Get("PIRATERADIO","output",DEFAULTOUTPUT);
 	s.btBoost=reader.GetBoolean("PIRATERADIO","btBoost",BTBOOST);
 
+	s.implementation="pi_fm_adv";
+	s.implementation=reader.Get("PIRATERADIO","implementation","pi_fm_rds");
+	if(s.implementation=="pi_fm_adv")
+		s.opSwitch="--";
+	else
+		s.opSwitch="-";
+
 	cout<<"freq: "<<s.freq<<endl<<"btGain: "<<s.btGain<<" storageGain: "<<s.storageGain \
 		<<endl<<"persistentPlaylist: "<<s.persistentPlaylist<<endl \
 		<<"resumePlayback: "<<s.resumePlayback<<endl<<"shuffle: "<<s.shuffle<<endl \
 		<<"rdsUpdateInterval: "<<s.rdsUpdateInterval<<endl<<"rdsCharsJump: " \
-		<<s.rdsCharsJump<<endl<<"Output: "<<s.output<<endl;
+		<<s.rdsCharsJump<<endl<<"Output: "<<s.output<<endl<<"Format: "\
+		<<s.format<<endl<<"implementation: "<<s.implementation<<endl;
 }

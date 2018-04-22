@@ -3,6 +3,8 @@
 /** setting datastructure */
 
 struct settings{
+	string implementation;
+	string opSwitch;
 	string freq;
 	string storage;
 	string format;

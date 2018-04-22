@@ -103,6 +103,14 @@ void read_tag_to_status(string songpath)
 	}
 }
 
+string getFileFormat(string songpath)
+{
+	size_t found = songpath.find_last_of(".");
+	string format = songpath.substr(found+1);
+	cout<<"FORMAT: "<<format<<endl;
+	return format;
+}
+
 int play_storage()
 {
 	bool repeat = true;
@@ -119,9 +127,9 @@ int play_storage()
 		string sox="sox -v "+s.storageGain+" -r 48000 -G";
 		string sox_params="-t wav - ";
 		set_effects(sox_params);
-		string pifm1="/usr/local/bin/pi_fm_rds -ctl /home/pi/rds_ctl -ps";
-		string pifm2="-rt";
-		string pifm3="-audio - -freq";
+		string pifm1="/usr/local/bin/"+s.implementation+" "+s.opSwitch+"ctl /home/pi/rds_ctl "+s.opSwitch+"ps";
+		string pifm2=s.opSwitch+"rt";
+		string pifm3=s.opSwitch+"audio - "+s.opSwitch+"freq";
 		string output="";
 		string songpath;
 		
@@ -135,6 +143,7 @@ int play_storage()
 			songpath=*it;
 
 			cout<<endl<<"PLAY: "<<songpath<<endl;
+			string format=getFileFormat(songpath);
 
 			read_tag_to_status(songpath);
 			
@@ -142,7 +151,8 @@ int play_storage()
 			output=pifm1+" "+"\""+ps.songName+"\""+" "+pifm2+" "+"\""+ps.songName+"\""+" "+pifm3+" "+s.freq;
 			set_output(output);			/**< change output device if specified */
 	
-			string cmdline=sox+" "+songpath+" "+sox_params+" | "+output;
+			string cmdline=sox+" -t "+format+" "+songpath+" "+sox_params+" | "+output;
+			cout<<"CMDLINE: "<<cmdline<<endl;
 	
 			update_now_playing();
 
@@ -160,7 +170,7 @@ int play_storage()
 int play_bt(string device)
 {
 	string sox_params="";
-	string output="sudo /usr/local/bin/pi_fm_rds -ps 'BLUETOOTH' -rt 'A2DP BLUETOOTH' -freq "+s.freq+" -audio -";
+	string output="sudo /usr/local/bin/"+s.implementation+" "+s.opSwitch+"ps 'BLUETOOTH' "+s.opSwitch+"rt 'A2DP BLUETOOTH' "+s.opSwitch+"freq "+s.freq+" "+s.opSwitch+"audio -";
 	set_output(output);			/**< change output device if specified */
 	if(s.btBoost)
 		set_effects(sox_params);
