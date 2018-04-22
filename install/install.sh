@@ -167,6 +167,7 @@ ExecStartPost=/bin/hciconfig hci0 piscan \
 |g' /lib/systemd/system/bluetooth.service
 
 echo PRETTY_HOSTNAME=raspberrypi > /etc/machine-info
+cp -f /sys/firmware/devicetree/base/model /etc/lastmodel
 
 echo "Completed! Rebooting in 5 seconds..."
 sleep 5 && reboot
