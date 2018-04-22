@@ -15,6 +15,8 @@ Exclusively tested on Minimal Raspbian (ARM)
 - [x] Send mp3 files to the Pi via Bluetooth
 - [x] Bluetooth OTA file management on the Pi with applications such as "Bluetooth Explorer Lite"
 - [x] Read metadata from the mp3 files 
+- [x] Multiple file format support [mp3/wav/flac]
+- [x] Read Only mode for saving sdcard from corruption when unplugging AC
 - [ ] Display Android notifications over RDS?
 - [ ] Bluetooth companion app (for android) 
 - [ ] Automatically partition the sdcard for a dedicated mp3 storage space (instead of using a USB drive)
@@ -50,6 +52,7 @@ btBoost=true		;Enhance Bluetooth audio. This might add a little latency
 persistentPlaylist=true
 resumePlayback=true   	;require persistentPlaylist to be enabled 
 shuffle=true 
+fileFormat=all          ;which file formats to search for. [mp3/flac/wav/all]
 
 [RDS]
 updateInterval=3      				;seconds between RDS refresh. lower values could result in RDS being ignored by your radio receiver
@@ -57,6 +60,13 @@ charsJump=6                             	;how many characters should shift betwe
 rdsPattern=$ARTIST_NAME - $SONG_NAME	;Pattern which is passed to eval() to produce title EG: $SONG_YEAR - $ALBUM_NAME
 
 ```
+Optional: Protect your SD card from corruption setting Read-Only mode
+use utility/roswitch.sh as follows:
+
+`roswitch.sh` ro to enable read-ony (effective from next boot)
+
+`roswitch.sh` rw to disable read-only (effective immediately)
+
 # Usage
 It (should) work out of the box. You need your mp3 files to be on a FAT32 usb stick. (along with the config file if you need to override default settings)
 You can **safely** shut down the Pi by unplugging the stick and waiting for about 5 seconds until the status led stops blinking.
