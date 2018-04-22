@@ -151,7 +151,7 @@ int play_storage()
 			pqueue.erase(it);	/**< shorten the playlist and save it after playback */
 			qsize--;
 			save_list(qsize);
-			remove("/home/pi/ps");	/**< removing playback status file as not needed when playback ends */
+			remove("/pirateradio/ps");	/**< removing playback status file as not needed when playback ends */
 		}
 	}
 	return 0;
