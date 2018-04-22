@@ -15,6 +15,8 @@ while True:
         time.sleep(0.25)
     elif counter == 1:
         print("kill sox");
+        call(["killall", "pi_fm_adv"])
+        call(["killall", "pi_fm_rds"])
         call(["killall", "sox"])
         time.sleep(0.25)
         counter = 0
