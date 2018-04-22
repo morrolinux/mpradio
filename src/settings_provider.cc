@@ -45,6 +45,7 @@ void getsettings()
 
 	s.storage=STORAGE;
 	s.format=reader.Get("PLAYLIST","fileFormat",FORMAT);
+	if(s.format=="all") s.format="mp3 -o -iname *.flac -o -iname *.wav";
 
 	s.output=reader.Get("PIRATERADIO","output",DEFAULTOUTPUT);
 	s.btBoost=reader.GetBoolean("PIRATERADIO","btBoost",BTBOOST);
