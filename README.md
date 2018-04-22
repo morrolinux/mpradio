@@ -23,7 +23,9 @@ Exclusively tested on Minimal Raspbian (ARM)
 
 # Known issues
 - Due to a design flaw in BCM43438 WIFI/BT chipset, you might need to disable WiFi if you experience BT audio stuttering on Pi Zero W and Pi 3: https://github.com/raspberrypi/linux/issues/1402
-- Boot can take as long as 1:30 min on the Pi1 and 2 due to BT UART interface missing on the board. `sudo systemctl mask dev-serial1.device` should help 
+- Boot can take as long as 1:30 min on the Pi1 and 2 due to BT UART interface missing on the board. 
+- PiFmAdv implementation (experimental) is really unstable on latest firmwares. installing an older one with
+`rpi-update fa19f1c6b3ea5d09fb30e0b38a69199eed210bb4` should help
 
 # Installation
 
