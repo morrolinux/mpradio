@@ -44,7 +44,7 @@ void getsettings()
 	s.rdsCharsJump=reader.GetInteger("RDS","charsJump",6);
 
 	s.storage=STORAGE;
-	s.format=FORMAT;
+	s.format=reader.Get("PLAYLIST","fileFormat",FORMAT);
 
 	s.output=reader.Get("PIRATERADIO","output",DEFAULTOUTPUT);
 	s.btBoost=reader.GetBoolean("PIRATERADIO","btBoost",BTBOOST);
