@@ -10,13 +10,13 @@ equals=$?
 if [[ $equals -eq 1 ]]
 then
 	echo different
+	mount -o remount rw /
+
 	cp $currentmodel $lastmodel
 	systemctl stop mpradio
 	killall mpradio
 	killall sox
 	killall PiFmRDS
-
-	mount -o remount rw /
 
 	cd /usr/local/src/PiFmRds/src/
 	make clean
