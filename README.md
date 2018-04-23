@@ -63,7 +63,8 @@ charsJump=6                             	;how many characters should shift betwe
 rdsPattern=$ARTIST_NAME - $SONG_NAME	;Pattern which is passed to eval() to produce title EG: $SONG_YEAR - $ALBUM_NAME
 
 ```
-Optional: Protect your SD card from corruption setting Read-Only mode
+Optional: Protect your SD card from corruption by setting Read-Only mode.
+
 use utility/roswitch.sh as follows:
 
 `roswitch.sh ro` to enable read-ony (effective from next boot)
