@@ -177,8 +177,9 @@ int play_bt(string device)
 
 	ps.songName = "Bluetooth";
 	update_now_playing();
-
-	string cmdline="arecord -D bluealsa -f cd -c 2 | sox -t raw -v "+s.btGain+" -G -b 16 -e signed -c 2 -r 44100 - -t wav - "+sox_params+" | "+output;
+	
+	string cmdline="arecord -D bluealsa:HCI=hci0,DEV="+device+" -f cd -c 2 | sox -t raw -v "+s.btGain+" -G -b 16 -e signed -c 2 -r 44100 - -t wav - "+sox_params+" | "+output;
+	//string cmdline="arecord -D bluealsa -f cd -c 2 | sox -t raw -v "+s.btGain+" -G -b 16 -e signed -c 2 -r 44100 - -t wav - "+sox_params+" | "+output;  //legacy mode
 
 	system(cmdline.c_str());
 	return 0;
