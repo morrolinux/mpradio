@@ -16,6 +16,8 @@ then
 	killall sox
 	killall PiFmRDS
 
+	mount -o remount rw /
+
 	cd /usr/local/src/PiFmRds/src/
 	make clean
 	make
