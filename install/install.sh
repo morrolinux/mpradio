@@ -168,7 +168,7 @@ ExecStartPost=/bin/hciconfig hci0 piscan \
 
 echo PRETTY_HOSTNAME=raspberrypi > /etc/machine-info
 cp -f /sys/firmware/devicetree/base/model /etc/lastmodel
-echo "gpu_freq=250" >> /boot/config.txt
+#echo "gpu_freq=250" >> /boot/config.txt
 
 echo "Completed! Rebooting in 5 seconds..."
 sleep 5 && reboot
