@@ -160,7 +160,7 @@ usermod -a -G lp pi
 
 # Edit /lib/systemd/system/bluetooth.service to enable BT services
 # Credits to Patrick Hundal, hacks.mozilla.org
-sudo sed -i: 's|^Exec.*toothd$| \
+sed -i: 's|^Exec.*toothd$| \
 ExecStart=/usr/lib/bluetooth/bluetoothd -C \
 ExecStartPost=/usr/bin/sdptool add SP \
 ExecStartPost=/bin/hciconfig hci0 piscan \
