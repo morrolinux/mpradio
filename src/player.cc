@@ -68,14 +68,18 @@ string trim_audio_track(string &path)
 
 void set_output(string &output)
 {
-	cout<<"setting audio output to "<<s.output<<endl;
-	if(s.output == "FM" || s.output == "fm")
-		return;
+ 	cout<<"setting audio output to "<<s.output<<endl;
+	if(s.output == "FM" || s.output == "fm"){
+		if(s.implementation == "pi_fm_adv")
+			output=output+" --wait 0";
+                return;
+        }
 	if(s.output == "ANALOG" || s.output == "analog"){
 		cout<<"ANALOG"<<endl;
 		output="aplay";
 	}
 }
+
 
 void set_effects(string &sox_params)
 {
