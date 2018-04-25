@@ -17,6 +17,7 @@ Exclusively tested on Minimal Raspbian (ARM)
 - [x] Read metadata from the mp3 files 
 - [x] Multiple file format support [mp3/wav/flac]
 - [x] Read Only mode for saving sdcard from corruption when unplugging AC
+- [x] PiFmAdv (optional)(experimental) implementation for better signal purity 
 - [ ] Display Android notifications over RDS?
 - [ ] Bluetooth companion app (for android) 
 - [ ] Automatically partition the sdcard for a dedicated mp3 storage space (instead of using a USB drive)
