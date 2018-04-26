@@ -56,7 +56,7 @@ void get_list()
 	char line[line_size];
 	string result;
 
-        string cmd = "find " + s.storage + " -not -path \'*/\\.*\' -iname *." + s.format;
+        string cmd = "find " + s.storage + " -not -path \'*/\\.*\' -iname *." + s.format + "|sort -V";
 	fp = popen(cmd.c_str(), "r");
 
 	while (fgets(line, line_size, fp)){
