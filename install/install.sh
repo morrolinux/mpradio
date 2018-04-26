@@ -166,7 +166,7 @@ ExecStartPost=/usr/bin/sdptool add SP \
 ExecStartPost=/bin/hciconfig hci0 piscan \
 |g' /lib/systemd/system/bluetooth.service
 
-echo PRETTY_HOSTNAME=raspberrypi > /etc/machine-info
+echo PRETTY_HOSTNAME=mpradio > /etc/machine-info
 cp -f /sys/firmware/devicetree/base/model /etc/lastmodel
 #echo "gpu_freq=250" >> /boot/config.txt
 
