@@ -24,13 +24,12 @@ Exclusively tested on Minimal Raspbian (ARM)
 
 # Known issues
 - Due to a design flaw in BCM43438 WIFI/BT chipset, you might need to disable WiFi if you experience BT audio stuttering on Pi Zero W and Pi 3: https://github.com/raspberrypi/linux/issues/1402
-- Boot can take as long as 1:30 min on the Pi1 and 2 due to BT UART interface missing on the board. 
-  reducing systemd timeout with `echo "DefaultTimeoutStartSec=40s" >> /etc/systemd/system.conf` should help
+- Boot can take as long as 1m30s on the Pi 1 and 2 due to BT UART interface missing on the board.
+  Reducing systemd timeout with `echo "DefaultTimeoutStartSec=40s" >> /etc/systemd/system.conf` should help
 - PiFmAdv implementation (experimental) is really unstable on latest firmwares. installing an older one with
 `rpi-update fa19f1c6b3ea5d09fb30e0b38a69199eed210bb4` should help
 
 # Installation
-
 First make sure your Raspbian is up to date:
 
 ` sudo apt-get update && sudo apt-get -y full-upgrade && sudo apt-get -y install git`
@@ -40,14 +39,14 @@ First make sure your Raspbian is up to date:
 ` cd mpradio-master/install && sudo ./install.sh`
 
 # Configuration
-By default, mpradio will always be running automatically after boot once installed. No additional configuration is needed.
+By default, `mpradio` will always be running automatically after boot once installed. No additional configuration is needed.
 However, you can change the FM streaming frequency (which is otherwise defaulted to 107.0) by placing a file named pirateradio.config in the root of a USB key (which of course, will need to stay plugged for the settings to be permanent)
 
 pirateradio.config example:
 ```
 [PIRATERADIO]
 frequency=107.0
-btGain=1.7            	;gain setting for bluetooth streaming
+btGain=1.7            	;gain setting for Bluetooth streaming
 storageGain=1.3       	;gain setting for stored files streaming
 output=fm		;[analog/fm] to stream thru FM or 3.5mm jack 
 btBoost=false		;Enhance Bluetooth audio. This might add a little latency
@@ -74,68 +73,66 @@ use utility/roswitch.sh as follows:
 `roswitch.sh rw` to disable read-only (effective immediately)
 
 # Usage
-It (should) work out of the box. You need your mp3 files to be on a FAT32 usb stick. (along with the config file if you need to override default settings)
-You can **safely** shut down the Pi by unplugging the stick and waiting for about 5 seconds until the status led stops blinking.
+It (should) work out of the box. You need your mp3 files to be on a FAT32 USB stick (along with the `pirateradio.config` file if you want to override the default settings).
+You can **safely** shut down the Pi by unplugging the stick and waiting for about 5 seconds until the status LED stops blinking.
 If you enabled "persistentPlaylist" option, your Pi will never play the same song twice before consuming the full playlist.
-If you add new songs on the usb stick, with "persistentPlaylist" enabled they won't be played until the current playlist is consumed. You can "rebuild" the playlist (looking for new recently added files) if needed:
-- boot your Pi with usb stick unplugged. (current playlist will be erased)
-- plug in your usb stick and unplug it again (this will cause a shut down) 
-- power on your Pi once again, with the usb key in it.
-- You're done! (mpradio will rebuild the playlist, counting the new files as well)
+If you add new songs on the USB stick, with "persistentPlaylist" enabled they won't be played until the current playlist is consumed. You can "rebuild" the playlist (looking for new recently added files) if needed:
+- Boot your Pi with USB stick unplugged. (The current playlist will be erased.)
+- Plug in your USB stick and unplug it again. (This will cause a shutdown.) 
+- Power on your Pi once again, with the USB key in it.
+- You're done! (`mpradio` will rebuild the playlist, counting the new files as well)
+  
+Also, please remember that (though it would be probably illegal) you can test FM broadcasting by plugging a 20cm wire on the **GPIO 4** of your Pi.
 
-Also, please remember that (although that would be probably illegal) you can test FM broadcasting by plugging a 20cm wire on the **GPIO 4** of your Pi
+# Updating 
+` cd mpradio-master/install && sudo ./install.sh update `
 
-# Update 
-` rm -rf mpradio-master/ ` 
-and then:
-
-installation steps
-
-OR, if you are a git guy:
+Or, if you prefer to be explicit:
 
 `cd mpradio-master && git fetch origin && git reset --hard origin/master && cd install && sudo ./install.sh`
 
 # Uninstallation / Removal
-In order to remove mpradio along with the packages that come with it:
+In order to remove `mpradio` along with the packages that come with it:
+
 ` cd mpradio-master/install && sudo ./install.sh remove `
 
-This has the effect of removing dependency packages whether or not you still want them. If you would like to keep the packages that mpradio depends on, run the following instead:
+This has the effect of removing dependency packages whether or not you still want them. If you would like to keep the packages that `mpradio` depends on, run the following instead:
 
 ` cd mpradio-master/install && sudo ./install.sh uninstall `
 
 # Debugging / Troubleshooting
-mpradio is launched as a service (via systemd) after boot completed
+## Services
+`mpradio` is launched as a service (via systemd) upon each boot.
 
-check whether the service is running or not: 
+To check whether the service is running or not: 
 
 ` $ sudo systemctl status mpradio `
 
-start or stop the service:
+To start or stop the service:
 
 ` $ sudo systemctl [start/stop] mpradio `
 
-As for Bluetooth:
+## Bluetooth
 
-Bluetooth connection logs are under ` /var/log/bluetooth_dev `
+Bluetooth connection logs are found at ` /var/log/bluetooth_dev `.
 
-if Raspberry's Bluetooth is not showing up, check if the interface is UP and the bt-setup script has been executed:
+If the Raspberry Pi is not showing up as a Bluetooth device, check whether the interface is UP, and that the `bt-setup` script is running:
 
 ` $ hciconfig `
 
 ` $ sudo systemctl status bt-setup `
 
-if you are having issues with bluetooth audio pairing, please also check if simple-agent service is running:
+If you are having issues with pairing Bluetooth for audio, please also check if `simple-agent` service is running:
 
 ` $ sudo systemctl status simple-agent `
 
-if you are having issues with bluetooth not connecting once it's paired, please check weather bluealsa is running or not:
+If you are having issues with Bluetooth not connecting once it's paired, please check whether `bluealsa` is running or not:
 
 ` $ sudo systemctl status bluealsa `
-
 
 A simple schematic of how things work together:
 
 ![Alt text](/doc/mpradio_schematic.png?raw=true "mpradio schematic")
 
 # Warning and Disclaimer
-mpradio relays on PiFmRds for FM-Streaming feature. Please note that in most states, transmitting radio waves without a state-issued licence specific to the transmission modalities (frequency, power, bandwidth, etc.) is illegal. Always use a shield between your radio receiver and the Raspberry. Never use an antenna. See PiFmRds Waring and Disclamer for more informations.
+`mpradio` relies on PiFmRds for FM-Streaming feature. Please note that in most states, transmitting radio waves without a state-issued licence specific to the transmission modalities (frequency, power, bandwidth, etc.) is illegal. Always use a shield between your radio receiver and the Raspberry. Never use an antenna. See PiFmRds Waring and Disclamer for more information.

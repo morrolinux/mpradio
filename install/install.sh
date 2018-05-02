@@ -1,11 +1,25 @@
 #!/bin/bash
 
+# Write this as an update script to ensure that bash
+# knows how to complete updating before it starts to.
+# Otherwise, it might begin corrupt execution using sudo ...
+update_script() {
+	sleep 1
+	git fetch origin
+	git reset --hard origin/master
+	cd install # If we are already in the install directory, this is OK
+	./install.sh
+	exit $?
+}
+
 if [ "$(id -u)" != "0" ]; then
    echo "This script must be run as root" 1>&2
    exit 1
 fi
 
-if [[ $1 == "remove" ]] ; then 
+if [[ $1 == "update" ]] ; then
+	update_script
+elif [[ $1 == "remove" ]] ; then
 	remove="all"
 elif [[ $1 == "uninstall" ]] ; then
 	remove="some"

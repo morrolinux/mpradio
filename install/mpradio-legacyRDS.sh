@@ -20,8 +20,8 @@ getTitle(){
 while true
 do
 	title=$(getTitle)
-	echo $title
-        title_length=$(echo $title|wc -c)
+	# echo $title
+    title_length=$(echo $title|wc -c)
 	finish=$((title_length+JUMP)) 
 
         for i in $(seq 9 $JUMP $finish);
