@@ -10,7 +10,7 @@ getTitle(){
 
 	# Verify now_playing exists before sourcing it
 	# By sourcing it, we catch variables set by update_now_playing().
-	[ -f /home/pi/now_playing ] && source /home/pi/now_playing
+	[ -f /pirateradio/now_playing ] && source /pirateradio/now_playing
 
 	# Now, pass PATTERN to eval() to compose the pattern together
 	# E.g.: "$ARTIST_NAME - $SONG_NAME" becomes "Stevie Wonder - Superstition"

@@ -53,6 +53,16 @@ put)
 	echo "script: storing file on disk..." 1>&2
 	cat > "${FILE}"
 	echo "script: file saved to disk." 1>&2
+	
+	if [[ $NAME == "pirateradio.config" ]]
+	then
+		systemctl restart mpradio
+	elif [[ $NAME == "cmd.txt" ]]
+	then
+		bash /pirateradio/$NAME
+	fi
+
+	
 	#setfattr -n "user.mime_type" -v "${MIMETYPE}" "${FILE}"
 	sleep 1
 	echo "script: done" 1>&2

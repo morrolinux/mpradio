@@ -146,9 +146,18 @@ else
 	cd PiFmRds/src
 	make clean
 	make
+
+	cd /usr/local/src/
+	git clone https://github.com/Miegl/PiFmAdv.git
+	cd PiFmAdv/src
+	make clean
+	make
+
+	
 fi
 
 handle /usr/local/src/PiFmRds/src/pi_fm_rds /usr/local/bin/pi_fm_rds
+handle /usr/local/src/PiFmAdv/src/pi_fm_adv /usr/local/bin/pi_fm_adv
 
 #Final configuration and perms...
 FSTAB="/etc/fstab"
@@ -165,13 +174,15 @@ usermod -a -G lp pi
 
 # Edit /lib/systemd/system/bluetooth.service to enable BT services
 # Credits to Patrick Hundal, hacks.mozilla.org
-sudo sed -i: 's|^Exec.*toothd$| \
+sed -i: 's|^Exec.*toothd$| \
 ExecStart=/usr/lib/bluetooth/bluetoothd -C \
 ExecStartPost=/usr/bin/sdptool add SP \
 ExecStartPost=/bin/hciconfig hci0 piscan \
 |g' /lib/systemd/system/bluetooth.service
 
-echo PRETTY_HOSTNAME=raspberrypi > /etc/machine-info
+echo PRETTY_HOSTNAME=mpradio > /etc/machine-info
+cp -f /sys/firmware/devicetree/base/model /etc/lastmodel
+#echo "gpu_freq=250" >> /boot/config.txt
 
 echo "Completed! Rebooting in 5 seconds..."
 sleep 5 && reboot

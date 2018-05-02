@@ -8,7 +8,7 @@ using namespace std;
 #include "datastruct.h"
 #include "files.h"
 
-constexpr auto PLAYLIST = "/home/pi/playlist";
+constexpr auto PLAYLIST = "/pirateradio/playlist";
 
 extern settings s;
 extern list<string> pqueue;
@@ -56,7 +56,7 @@ void get_list()
 	char line[line_size];
 	string result;
 
-        string cmd = "find " + s.storage + " -not -path \'*/\\.*\' -iname *." + s.format;
+        string cmd = "find " + s.storage + " -not -path \'*/\\.*\' -iname *." + s.format + "|sort -V";
 	fp = popen(cmd.c_str(), "r");
 
 	while (fgets(line, line_size, fp)){
@@ -137,7 +137,7 @@ void load_playback_status()
 {
 	if(ps.resumed) return;		/**< don't do anything if already restored */
 
-	ifstream psfile("/home/pi/ps");
+	ifstream psfile("/pirateradio/ps");
 	if (psfile.is_open()){
 		psfile>>ps.songIndex;
 		psfile>>ps.playbackPosition;
@@ -153,7 +153,7 @@ void load_playback_status()
 void update_now_playing()
 {
 	ofstream playing;
-	playing.open("/home/pi/now_playing");
+	playing.open("/pirateradio/now_playing");
 	playing<<"SONG_NAME='"<<ps.songName<<"'\n"
 		   <<"SONG_YEAR='"<<ps.songYear<<"'\n"
 		   <<"ALBUM_NAME='"<<ps.songAlbum<<"'\n"
@@ -171,7 +171,7 @@ void update_playback_status()
 	while (true){
 		sleep(seconds);
 		ps.playbackPosition+=5;
-		psfile.open("/home/pi/ps");
+		psfile.open("/pirateradio/ps");
 		psfile<<ps.songIndex<<" "<<ps.playbackPosition<<endl;
 		psfile.close();
 	}

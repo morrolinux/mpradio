@@ -15,18 +15,24 @@ Exclusively tested on Minimal Raspbian (ARM)
 - [x] Send mp3 files to the Pi via Bluetooth
 - [x] Bluetooth OTA file management on the Pi with applications such as "Bluetooth Explorer Lite"
 - [x] Read metadata from the mp3 files 
+- [x] Multiple file format support [mp3/wav/flac]
+- [x] Read Only mode for saving sdcard from corruption when unplugging AC
+- [x] PiFmAdv (optional)(experimental) implementation for better signal purity 
 - [ ] Display Android notifications over RDS?
 - [ ] Bluetooth companion app (for android) 
 - [ ] Automatically partition the sdcard for a dedicated mp3 storage space (instead of using a USB drive)
 
 # Known issues
 - Due to a design flaw in BCM43438 WIFI/BT chipset, you might need to disable WiFi if you experience BT audio stuttering on Pi Zero W and Pi 3: https://github.com/raspberrypi/linux/issues/1402
-- Boot can take as long as 1m30s on the Pi 1 and 2 due to BT UART interface missing on the board. (`sudo systemctl mask dev-serial1.device` should help.) 
+- Boot can take as long as 1m30s on the Pi 1 and 2 due to BT UART interface missing on the board.
+  Reducing systemd timeout with `echo "DefaultTimeoutStartSec=40s" >> /etc/systemd/system.conf` should help
+- PiFmAdv implementation (experimental) is really unstable on latest firmwares. installing an older one with
+`rpi-update fa19f1c6b3ea5d09fb30e0b38a69199eed210bb4` should help
 
 # Installation
 First make sure your Raspbian is up to date:
 
-` sudo apt-get update && sudo apt-get -y full-upgrade && sudo apt-get install git`
+` sudo apt-get update && sudo apt-get -y full-upgrade && sudo apt-get -y install git`
 
 ` git clone https://github.com/morrolinux/mpradio.git mpradio-master `
 
@@ -43,19 +49,29 @@ frequency=107.0
 btGain=1.7            	;gain setting for Bluetooth streaming
 storageGain=1.3       	;gain setting for stored files streaming
 output=fm		;[analog/fm] to stream thru FM or 3.5mm jack 
-btBoost=true		;Enhance Bluetooth audio. This might add a little latency
+btBoost=false		;Enhance Bluetooth audio. This might add a little latency
+implementation=pi_fm_rds	;[pi_fm_rds/pi_fm_adv] - pi_fm_adv (experimental) has a much cleaner sound but it's quite unstable
 
 [PLAYLIST]
 persistentPlaylist=true
 resumePlayback=true   	;require persistentPlaylist to be enabled 
 shuffle=true 
+fileFormat=all          ;which file formats to search for. [mp3/flac/wav/all]
 
 [RDS]
 updateInterval=3      				;seconds between RDS refresh. lower values could result in RDS being ignored by your radio receiver
 charsJump=6                             	;how many characters should shift between updates [1-8]
-rdsPattern=$ARTIST_NAME - $SONG_NAME 	;pattern which is passed to eval() to produce title
+rdsPattern=$ARTIST_NAME - $SONG_NAME	;Pattern which is passed to eval() to produce title EG: $SONG_YEAR - $ALBUM_NAME
 
 ```
+Optional: Protect your SD card from corruption by setting Read-Only mode.
+
+use utility/roswitch.sh as follows:
+
+`roswitch.sh ro` to enable read-ony (effective from next boot)
+
+`roswitch.sh rw` to disable read-only (effective immediately)
+
 # Usage
 It (should) work out of the box. You need your mp3 files to be on a FAT32 USB stick (along with the `pirateradio.config` file if you want to override the default settings).
 You can **safely** shut down the Pi by unplugging the stick and waiting for about 5 seconds until the status LED stops blinking.
