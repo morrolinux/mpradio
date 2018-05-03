@@ -182,7 +182,10 @@ ExecStartPost=/bin/hciconfig hci0 piscan \
 
 echo PRETTY_HOSTNAME=mpradio > /etc/machine-info
 cp -f /sys/firmware/devicetree/base/model /etc/lastmodel
-echo "gpu_freq=250" >> /boot/config.txt
+
+if [[ $(grep "gpu_freq=250" /boot/config.txt) == "" ]]; then 
+    echo "gpu_freq=250" >> /boot/config.txt
+fi
 
 echo "Completed! Rebooting in 5 seconds..."
 sleep 5 && reboot
