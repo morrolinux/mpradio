@@ -48,7 +48,7 @@ frequency=107.0
 btGain=1.7            	;gain setting for bluetooth streaming
 storageGain=1.3       	;gain setting for stored files streaming
 output=fm		;[analog/fm] to stream thru FM or 3.5mm jack 
-btBoost=true		;Enhance Bluetooth audio. This might add a little latency
+btBoost=false		;Enhance Bluetooth audio. This might add a little latency
 
 [PLAYLIST]
 persistentPlaylist=true
