@@ -9,6 +9,7 @@ struct settings{
 	string storage;
 	string format;
 	string btGain;
+	string treble;
 	string storageGain;
 	string output;
 	bool shuffle;

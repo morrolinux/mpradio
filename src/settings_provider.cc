@@ -57,10 +57,12 @@ void getsettings()
 	else
 		s.opSwitch="-";
 
+	s.treble = reader.Get("PIRATERADIO","treble","0");
+
 	cout<<"freq: "<<s.freq<<endl<<"btGain: "<<s.btGain<<" storageGain: "<<s.storageGain \
 		<<endl<<"persistentPlaylist: "<<s.persistentPlaylist<<endl \
 		<<"resumePlayback: "<<s.resumePlayback<<endl<<"shuffle: "<<s.shuffle<<endl \
 		<<"rdsUpdateInterval: "<<s.rdsUpdateInterval<<endl<<"rdsCharsJump: " \
 		<<s.rdsCharsJump<<endl<<"Output: "<<s.output<<endl<<"Format: "\
-		<<s.format<<endl<<"implementation: "<<s.implementation<<endl;
+		<<s.format<<endl<<"implementation: "<<s.implementation<<endl<<"Treble: "<<s.treble<<endl;
 }

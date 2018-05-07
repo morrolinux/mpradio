@@ -83,7 +83,10 @@ void set_output(string &output)
 
 void set_effects(string &sox_params)
 {
-	sox_params+="compand 0.3,1 6:-70,-60,-20 -5 -90 0.2";
+	if(s.btBoost)
+		sox_params+="compand 0.3,1 6:-70,-60,-20 -5 -90 0.2 ";
+	if(s.treble != "0")
+		sox_params+="treble "+s.treble;
 }
 
 /*! \brief Read the contents of the ID3tag on the file at songpath
@@ -176,8 +179,7 @@ int play_bt(string device)
 	string sox_params="";
 	string output="sudo /usr/local/bin/"+s.implementation+" "+s.opSwitch+"ps 'BLUETOOTH' "+s.opSwitch+"rt 'A2DP BLUETOOTH' "+s.opSwitch+"freq "+s.freq+" "+s.opSwitch+"audio -";
 	set_output(output);			/**< change output device if specified */
-	if(s.btBoost)
-		set_effects(sox_params);
+	set_effects(sox_params);
 
 	ps.songName = "Bluetooth";
 	update_now_playing();
