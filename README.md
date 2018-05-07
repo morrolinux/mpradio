@@ -46,24 +46,21 @@ pirateradio.config example:
 ```
 [PIRATERADIO]
 frequency=107.0
-btGain=1.7            	;gain setting for Bluetooth streaming
-storageGain=1.3       	;gain setting for stored files streaming
-output=fm		;[analog/fm] to stream thru FM or 3.5mm jack 
-btBoost=false		;Enhance Bluetooth audio. This might add a little latency
-<<<<<<< HEAD
-=======
+btGain=1.7            	;gain setting for bluetooth streaming
+storageGain=1         	;gain setting for stored files streaming
+output=fm		            ;[fm/analog] for FM output or 3.5 mm jack output
+btBoost=false		        ;Enhance Bluetooth audio. This might add a little latency
 implementation=pi_fm_rds	;[pi_fm_rds/pi_fm_adv] - pi_fm_adv (experimental) has a much cleaner sound but it's quite unstable
->>>>>>> 168bb67ce187d0d812278f7eae646635dfa88856
 
 [PLAYLIST]
 persistentPlaylist=true
-resumePlayback=true   	;require persistentPlaylist to be enabled 
+resumePlayback=true   	;require persistentPlaylist to be enabled
 shuffle=true 
 fileFormat=all          ;which file formats to search for. [mp3/flac/wav/all]
 
 [RDS]
 updateInterval=3      				;seconds between RDS refresh. lower values could result in RDS being ignored by your radio receiver
-charsJump=6                             	;how many characters should shift between updates [1-8]
+charsJump=6           				;how many characters should shift between updates [1-8]
 rdsPattern=$ARTIST_NAME - $SONG_NAME	;Pattern which is passed to eval() to produce title EG: $SONG_YEAR - $ALBUM_NAME
 
 ```
