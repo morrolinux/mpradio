@@ -68,14 +68,18 @@ string trim_audio_track(string &path)
 
 void set_output(string &output)
 {
-	cout<<"setting audio output to "<<s.output<<endl;
-	if(s.output == "FM" || s.output == "fm")
-		return;
+ 	cout<<"setting audio output to "<<s.output<<endl;
+	if(s.output == "FM" || s.output == "fm"){
+		if(s.implementation == "pi_fm_adv")
+			output=output+" --wait 0";
+                return;
+        }
 	if(s.output == "ANALOG" || s.output == "analog"){
 		cout<<"ANALOG"<<endl;
 		output="aplay";
 	}
 }
+
 
 void set_effects(string &sox_params)
 {
@@ -177,8 +181,9 @@ int play_bt(string device)
 
 	ps.songName = "Bluetooth";
 	update_now_playing();
-
-	string cmdline="arecord -D bluealsa -f cd -c 2 | sox -t raw -v "+s.btGain+" -G -b 16 -e signed -c 2 -r 44100 - -t wav - "+sox_params+" | "+output;
+	
+	string cmdline="arecord -D bluealsa:HCI=hci0,DEV="+device+" -f cd -c 2 | sox -t raw -v "+s.btGain+" -G -b 16 -e signed -c 2 -r 44100 - -t wav - "+sox_params+" | "+output;
+	//string cmdline="arecord -D bluealsa -f cd -c 2 | sox -t raw -v "+s.btGain+" -G -b 16 -e signed -c 2 -r 44100 - -t wav - "+sox_params+" | "+output;  //legacy mode
 
 	system(cmdline.c_str());
 	return 0;

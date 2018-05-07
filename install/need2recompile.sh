@@ -3,19 +3,21 @@
 currentmodel="/sys/firmware/devicetree/base/model"
 lastmodel="/etc/lastmodel"
 
-touch $lastmodel
 diff $currentmodel $lastmodel
 equals=$?
 
 if [[ $equals -eq 1 ]]
 then
 	echo different
+	mount -o remount rw /
+
 	cp $currentmodel $lastmodel
 	systemctl stop mpradio
 	killall mpradio
 	killall sox
-	killall PiFmRDS
-
+	killall pi_fm_rds
+	killall pi_fm_adv
+	
 	cd /usr/local/src/PiFmRds/src/
 	make clean
 	make
