@@ -8,10 +8,12 @@
 using namespace std;
 #include "datastruct.h"
 #include "files.h"
+#include "control_pipe.h"
 
 #define SAFE_NULL(X) (NULL == X ? "" : X)
 
 constexpr auto RDS_CTL= "/home/pi/rds_ctl";
+constexpr auto MPRADIO_CTL= "/home/pi/mpradio_ctl";
 
 extern settings s;
 list<string> pqueue;
@@ -23,6 +25,9 @@ void legacy_rds_init()
 	remove(RDS_CTL);
 	mkfifo(RDS_CTL,S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
 	chmod(RDS_CTL,0777);
+	remove(MPRADIO_CTL);
+	mkfifo(MPRADIO_CTL,S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
+	chmod(MPRADIO_CTL,0777);
 }
 
 void set_next_element(int qsize)
@@ -126,6 +131,7 @@ int play_storage()
 	
 	load_playback_status();
 	thread persistPlayback (update_playback_status);
+	open_control_pipe(MPRADIO_CTL);
 
 	while(repeat){
 		get_list();		/**< generate a file list */
@@ -164,6 +170,7 @@ int play_storage()
 			update_now_playing();
 
 			system(cmdline.c_str());
+			poll_control_pipe();
 
 			pqueue.erase(it);	/**< shorten the playlist and save it after playback */
 			qsize--;
@@ -171,6 +178,7 @@ int play_storage()
 			remove("/pirateradio/ps");	/**< removing playback status file as not needed when playback ends */
 		}
 	}
+	close_control_pipe();
 	return 0;
 }
 
