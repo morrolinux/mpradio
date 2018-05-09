@@ -4,10 +4,13 @@
 #include <string>
 #include <list>
 #include <sys/stat.h>
+#include <id3/tag.h>
+#include <id3/misc_support.h>
 using namespace std;
 #include "datastruct.h"
 #include "files.h"
 
+#define SAFE_NULL(X) (NULL == X ? "" : X)
 constexpr auto PLAYLIST = "/pirateradio/playlist";
 
 extern settings s;
@@ -36,7 +39,6 @@ int get_process_output_line(string cmd,string &output){
 	else
 		output=output.erase(output.find('\n'));	//remove lewline char
 
-	cout<<exitcode;
 	return exitcode;
 }
 
@@ -152,6 +154,7 @@ void load_playback_status()
  */
 void update_now_playing()
 {
+	if(ps.repeat) return;
 	ofstream playing;
 	playing.open("/pirateradio/now_playing");
 	playing<<"SONG_NAME='"<<ps.songName<<"'\n"
@@ -165,6 +168,7 @@ void update_now_playing()
 void update_playback_status()
 {
 	if(!s.resumePlayback) return;
+	if(ps.repeat);
 
 	unsigned int seconds = 5;
 	ofstream psfile;
@@ -177,3 +181,36 @@ void update_playback_status()
 	}
 
 }
+
+/*! \brief Read the contents of the ID3tag on the file at songpath
+ *         into playbackStatus ps, so that we can keep track of them.
+ * @param[in]  songpath String representing the full filepath of current song.
+ */
+void read_tag_to_status(string songpath)
+{
+	if(ps.repeat) return;
+	ID3_Tag tag(songpath.c_str());
+	
+	ps.songPath = songpath;
+	ps.songName = SAFE_NULL(ID3_GetTitle( &tag ));
+	ps.songArtist = SAFE_NULL(ID3_GetArtist( &tag ));
+	ps.songAlbum = SAFE_NULL(ID3_GetAlbum( &tag ));
+	ps.songYear = SAFE_NULL(ID3_GetYear( &tag ));
+
+	if(ps.songName.empty()) {
+		size_t found = songpath.find_last_of("/");	/**< extract song name out of the absolute file path */
+		string songname=songpath.substr(found+1);
+		ps.songName=songname;			
+	}
+}
+
+void get_file_format(string songpath)
+{
+	if(ps.repeat) return;
+	size_t found = songpath.find_last_of(".");
+	string format = songpath.substr(found+1);
+	cout<<"FORMAT: "<<format<<endl;
+	ps.fileFormat = format;
+}
+
+

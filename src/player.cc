@@ -3,17 +3,19 @@
 #include <list>
 #include <thread>
 #include <sys/stat.h>
-#include <id3/tag.h>
-#include <id3/misc_support.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/wait.h>
 using namespace std;
 #include "datastruct.h"
 #include "files.h"
 #include "control_pipe.h"
 
-#define SAFE_NULL(X) (NULL == X ? "" : X)
+unsigned int microseconds = 500000;
 
 constexpr auto RDS_CTL= "/home/pi/rds_ctl";
 constexpr auto MPRADIO_CTL= "/home/pi/mpradio_ctl";
+constexpr auto MPRADIO_STREAM = "/home/pi/mpradio_stream";
 
 extern settings s;
 list<string> pqueue;
@@ -22,50 +24,55 @@ playbackStatus ps;
 
 void legacy_rds_init()
 {
-	remove(RDS_CTL);
+	cout<<"LEGACY_RDS_INIT";
 	mkfifo(RDS_CTL,S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
 	chmod(RDS_CTL,0777);
-	remove(MPRADIO_CTL);
 	mkfifo(MPRADIO_CTL,S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
 	chmod(MPRADIO_CTL,0777);
+	mkfifo(MPRADIO_STREAM,S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
 }
 
-void set_next_element(int qsize)
+void set_next_element()
 {
+	if(ps.repeat) return;
+	int qsize=pqueue.size();
+
+	/** determine how the next song should be choosen */
 	if(s.resumePlayback && !ps.resumed){
 		//load_playback_status();    //already called at init stage
-		return;
-	}
-	if(s.shuffle)
+	}else if(s.shuffle){
 		ps.songIndex=(rand() % qsize);
-	else
+	}else{
 		ps.songIndex=0;
+	}
+
+	/** set ps.songPath to the corresponding playlist index */
+	it=pqueue.begin();
+	advance (it,ps.songIndex);
+	ps.songPath=*it;
 }
 
 /** 
   * DO NOT HINIBIT THIS FUNCTION
-  * as it adds the needed " " for the path as well
   */
-string trim_audio_track(string &path)
+string trim_audio_track(string path)
 {
 	string trim="";
+	int filesize=get_file_size(path);
+	float duration=get_song_duration(path);
+	int bs=get_file_bs(filesize,duration);
+	if(bs == 0) bs=4;
 
 	if(s.resumePlayback && !ps.resumed){
-		int filesize=get_file_size(path);
-		float duration=get_song_duration(path);
-		int bs=get_file_bs(filesize,duration);
-
 		if(ps.playbackPosition >= 5)		/**< resume few seconds back */
 			ps.playbackPosition-=5;
 
 		cout<<"seeking the track..."<<endl;
 		trim="dd bs="+to_string(bs)+"k skip="+to_string(ps.playbackPosition)+" if=\""+path+"\" | ";
-		path=" - ";
 		ps.resumed=true;
 	}else{
-		trim="";
+		trim="dd bs="+to_string(bs)+"k skip=0 if=\""+path+"\" | ";
 		ps.playbackPosition=0;
-		path="\""+path+"\"";
 	}
 
 	return trim;
@@ -80,11 +87,13 @@ void set_output(string &output)
                 return;
         }
 	if(s.output == "ANALOG" || s.output == "analog"){
-		cout<<"ANALOG"<<endl;
 		output="aplay";
+		return;
+	}
+	if(s.output == "PIPE" || s.output == "pipe"){
+		output="cat > /home/pi/mpradio_stream";
 	}
 }
-
 
 void set_effects(string &sox_params)
 {
@@ -94,33 +103,31 @@ void set_effects(string &sox_params)
 		sox_params+="treble "+s.treble;
 }
 
-/*! \brief Read the contents of the ID3tag on the file at songpath
- *         into playbackStatus ps, so that we can keep track of them.
- * @param[in]  songpath String representing the full filepath of current song.
- */
-void read_tag_to_status(string songpath)
-{
-	ID3_Tag tag(songpath.c_str());
-	
-	ps.songPath = songpath;
-	ps.songName = SAFE_NULL(ID3_GetTitle( &tag ));
-	ps.songArtist = SAFE_NULL(ID3_GetArtist( &tag ));
-	ps.songAlbum = SAFE_NULL(ID3_GetAlbum( &tag ));
-	ps.songYear = SAFE_NULL(ID3_GetYear( &tag ));
+int fork_process(string cmd){
+	pid_t pid = fork();
+	if (pid == 0){
+		//child process
+		setsid();
+		execlp("/bin/bash","bash","-c",cmd.c_str(),NULL);
+		return 0;
+	}else if(pid > 0){
+		//parent process
+		cout<<"parent process started\n";
+		ps.pid=pid;
+		int ps_status;
+		usleep(microseconds);
 
-	if(ps.songName.empty()) {
-		size_t found = songpath.find_last_of("/");	/**< extract song name out of the absolute file path */
-		string songname=songpath.substr(found+1);
-		ps.songName=songname;			
+		while (waitpid(pid, &ps_status, WNOHANG) == 0){
+			usleep(microseconds);
+		 	poll_control_pipe();
+		}
+	}else{
+		//fork failed
+		cout<<"fork failed \n";
+		return 1;
 	}
-}
-
-string getFileFormat(string songpath)
-{
-	size_t found = songpath.find_last_of(".");
-	string format = songpath.substr(found+1);
-	cout<<"FORMAT: "<<format<<endl;
-	return format;
+	cout<<"end of fork"<<endl;
+	return 0;
 }
 
 int play_storage()
@@ -129,49 +136,47 @@ int play_storage()
 	srand (time(NULL));
 	legacy_rds_init();
 	
-	load_playback_status();
-	thread persistPlayback (update_playback_status);
+	load_playback_status();		/**< retrive songIndex and playbackPosition from ps file */
+	thread persistPlayback (update_playback_status);	/**< this will keep updated the ps file with current index:position */
 	open_control_pipe(MPRADIO_CTL);
 
 	while(repeat){
-		get_list();		/**< generate a file list */
+		get_list();		/**< generate a file list into pqueue */
 		int qsize=pqueue.size();
-	
-		string sox="sox -v "+s.storageGain+" -r 48000 -G";
-		string sox_params="-t wav - ";
+
+		string sox="sox -v "+s.storageGain+" -r 48000 -G ";
+		string sox_params=" - -t wav - ";
 		set_effects(sox_params);
 		string pifm1="/usr/local/bin/"+s.implementation+" "+s.opSwitch+"ctl /home/pi/rds_ctl "+s.opSwitch+"ps";
 		string pifm2=s.opSwitch+"rt";
 		string pifm3=s.opSwitch+"audio - "+s.opSwitch+"freq";
 		string output="";
-		string songpath;
 		
 		if(qsize <= 0) repeat=false;		/**< infinite loop protection if no file are present */
 		
 		while(qsize > 0)
 		{
-			it=pqueue.begin();
-			set_next_element(qsize);
-			advance (it,ps.songIndex);
-			songpath=*it;
+			set_next_element();
 
-			cout<<endl<<"PLAY: "<<songpath<<endl;
-			string format=getFileFormat(songpath);
-
-			read_tag_to_status(songpath);
+			cout<<endl<<"PLAY: "<<ps.songPath<<endl;
+			get_file_format(ps.songPath);
+			read_tag_to_status(ps.songPath);
 			
-			sox=trim_audio_track(songpath)+sox;		/**< substitute ps.songName with stdin (-) from dd if playback must be resumed */
+			string trim=trim_audio_track(ps.songPath); 
+			
 			output=pifm1+" "+"\""+ps.songName+"\""+" "+pifm2+" "+"\""+ps.songName+"\""+" "+pifm3+" "+s.freq;
 			set_output(output);			/**< change output device if specified */
 	
-			string cmdline=sox+" -t "+format+" "+songpath+" "+sox_params+" | "+output;
+			string cmdline=trim+sox+" -t "+ps.fileFormat+sox_params+" | "+output;
 			cout<<"CMDLINE: "<<cmdline<<endl;
 	
 			update_now_playing();
 
-			system(cmdline.c_str());
-			poll_control_pipe();
+			ps.repeat=false;
+			fork_process(cmdline);
 
+			if(ps.repeat) continue;
+			cout<<"removing played song from playlist...\n";
 			pqueue.erase(it);	/**< shorten the playlist and save it after playback */
 			qsize--;
 			save_list(qsize);

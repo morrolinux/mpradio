@@ -26,7 +26,10 @@ struct playbackStatus{
 	string songArtist;
 	string songAlbum;
 	string songYear;
+	string fileFormat;
+	pid_t pid;
 	int songIndex=0;
 	int playbackPosition=0;
 	bool resumed=false;
+	bool repeat=false;
 };

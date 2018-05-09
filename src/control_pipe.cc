@@ -1,13 +1,16 @@
 #include <iostream>
 #include <string>
 #include <fcntl.h>
+#include <unistd.h>
+#include <sys/wait.h>
 using namespace std;
 #include "control_pipe.h"
-
+#include "datastruct.h"
 #define CTL_BUFFER_SIZE 100
 
 FILE *f_ctl;
-string command;
+extern playbackStatus ps;
+extern settings s;
 
 /*
  * Opens a file (pipe) to be used to control the RDS coder, in non-blocking mode.
@@ -36,13 +39,35 @@ int open_control_pipe(const char *filename) {
 
 int poll_control_pipe() {
     static char buf[CTL_BUFFER_SIZE];
-
     char *res = fgets(buf, CTL_BUFFER_SIZE, f_ctl);
+    string::size_type sz;
     if(res == NULL) return -1;
 
-    command = res;
-    cout<<command<<endl;
-    
+    string input = string(res);
+    input.erase(input.size() - 1);	//removing carriage return
+
+    size_t found = input.find_first_of(" ");
+    cout<<"found space at: "<<found<<endl;
+    string command = input.substr(0,found);
+    string arguments = input.substr(found+1);
+    cout<<"command: "<<command<<" arguments: "<<arguments<<endl;
+
+    if (command.compare("SKIP") == 0){
+	    killpg(ps.pid,15);
+    }else if(command.compare("SEEK") == 0){
+	    if(!(arguments[0] == '+' || arguments[0] == '-')) return -1;
+
+	    ps.repeat = true;
+
+	    ps.playbackPosition = ps.playbackPosition + stoi(arguments,&sz);
+	    if(ps.playbackPosition < 0)
+		    ps.playbackPosition = 0;
+
+	    s.resumePlayback = true;
+	    ps.resumed = false;
+	    killpg(ps.pid,15);
+    }
+
     return 0;
 }
 

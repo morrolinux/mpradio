@@ -9,4 +9,5 @@ float get_song_duration(string path);
 void load_playback_status();
 void update_playback_status();
 void update_now_playing();
-
+void read_tag_to_status(string songpath);
+void get_file_format(string songpath);
