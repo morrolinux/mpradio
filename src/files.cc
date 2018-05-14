@@ -206,7 +206,7 @@ void read_tag_to_status(string songpath)
 
 void get_file_format(string songpath)
 {
-	if(ps.repeat) return;
+	//if(ps.repeat) return;
 	size_t found = songpath.find_last_of(".");
 	string format = songpath.substr(found+1);
 	cout<<"FORMAT: "<<format<<endl;
