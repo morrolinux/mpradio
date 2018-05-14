@@ -6,6 +6,7 @@
 using namespace std;
 #include "control_pipe.h"
 #include "datastruct.h"
+#include "files.h"
 #define CTL_BUFFER_SIZE 100
 
 FILE *f_ctl;
@@ -66,7 +67,16 @@ int poll_control_pipe() {
 	    s.resumePlayback = true;
 	    ps.resumed = false;
 	    killpg(ps.pid,15);
-    }
+    }else if(command.compare("PLAY") == 0){		//TRIAL (works but meh..)
+	    if(!(arguments[0] == '/')) return -1;
+	    ps.songPath = arguments;
+	    ps.repeat = true;
+	    ps.playbackPosition = 0;
+	    get_file_format(arguments);
+    	    s.resumePlayback = true;
+	    ps.resumed = false;
+	    killpg(ps.pid,15);
+}
 
     return 0;
 }
