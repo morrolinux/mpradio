@@ -4,6 +4,8 @@
  */
 
 #include <iostream>
+#include <sstream>
+#include <fstream>
 #include <string>
 #include <unistd.h>
 #include <fcntl.h>
@@ -20,7 +22,7 @@ using namespace std;
 constexpr auto MPRADIO_CTL= "/home/pi/mpradio_ctl";
 constexpr auto CHANNEL=1;
 
-int fd;
+int fd, client;
 
 int open_control_pipe(const char *filename) {
 	fd = open(filename, O_WRONLY | O_NONBLOCK);
@@ -42,22 +44,36 @@ int write_pipe(string message){
 	return 0;
 }
 
+string get_now_playing(){
+	ifstream t("/pirateradio/now_playing");
+	stringstream buffer;
+	buffer << t.rdbuf();
+	string result = buffer.str();
+	return result;
+}
+
 void handle(string message){
 	size_t found = message.find_first_of(" ");
 	string command = message.substr(0,found);
 	string arguments = message.substr(found+1);	//PS: arguments == command if no args are provided
-	
+	string reply = "";
+
 	if (command.compare("system") == 0){
 		system(arguments.c_str());
+		return;
+	}else if (command.compare("now_playing") == 0){
+		reply = get_now_playing();
 	}else{
 		write_pipe(command);
+		return;
 	}
+	write(client,reply.c_str(),reply.size()+1);
 }
 
 int main(void)
 {
 	system("sdptool add --channel=CHANNEL SP");
-	int sock, client, bytes_read;
+	int sock, bytes_read;
 	unsigned int alen;
 	struct sockaddr_rc addr;
 	char buf[1024] = { 0 };
