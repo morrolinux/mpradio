@@ -144,7 +144,7 @@ int play_storage()
 		get_list();		/**< generate a file list into pqueue */
 		int qsize=pqueue.size();
 
-		string sox="sox -v "+s.storageGain+" -r 48000 -G ";
+		string sox="sox -v "+s.storageGain+" -r 44100 -G ";
 		string sox_params=" - -t wav - ";
 		set_effects(sox_params);
 		string pifm1="/usr/local/bin/"+s.implementation+" "+s.opSwitch+"ctl /home/pi/rds_ctl "+s.opSwitch+"ps";
