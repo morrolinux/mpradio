@@ -98,9 +98,12 @@ else
 
 	make clean
 	make
+
+ 	g++ -o rfcomm-remote rfcomm-remote.cc -lbluetooth
 fi
 
 handle mpradio /bin/mpradio
+handle rfcomm-remote /usr/local/bin/rfcomm-remote
 
 if [[ $remove ]]; then
 	systemctl disable mpradio.service

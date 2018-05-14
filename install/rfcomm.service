@@ -1,10 +1,10 @@
 [Unit]
 Description=RFCOMM service
-After=bluetooth.service
+After=bluetooth.service mpradio.service
 Requires=bluetooth.service
 
 [Service]
-ExecStart=/usr/bin/rfcomm watch hci0 1 getty rfcomm0 115200 vt100 -a pi
+ExecStart=/usr/local/bin/rfcomm-remote
 
 [Install]
 WantedBy=multi-user.target
