@@ -114,6 +114,7 @@ if [[ $remove ]]; then
 	systemctl disable mpradio-legacy-rds.service
 	systemctl disable mpradio-pushbutton-skip.service
 	systemctl disable obexpushd.service
+	systemctl enable rfcomm
 fi
 
 #Installing service units, or uninstalling them.
@@ -137,6 +138,7 @@ if [[ ! $remove ]]; then
 	systemctl enable mpradio-legacy-rds.service
 	systemctl enable mpradio-pushbutton-skip.service
 	systemctl enable obexpushd.service
+	systemctl enable rfcomm
 fi
 
 #Installing PiFmRDS...
