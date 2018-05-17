@@ -44,8 +44,8 @@ int write_pipe(string message){
 	return 0;
 }
 
-string get_now_playing(){
-	ifstream t("/pirateradio/now_playing");
+string get_file_content(string filename){
+	ifstream t(filename);
 	stringstream buffer;
 	buffer << t.rdbuf();
 	string result = buffer.str();
@@ -62,9 +62,14 @@ void handle(string message){
 		system(arguments.c_str());
 		return;
 	}else if (command.compare("now_playing") == 0){
-		reply = get_now_playing();
+		reply = get_file_content("/pirateradio/now_playing");
+	}else if(command.compare("playlist") == 0){
+		reply = get_file_content("/pirateradio/playlist");
 	}else{
-		write_pipe(command);
+		if(command.compare(arguments) == 0)
+			write_pipe(command);
+		else
+			write_pipe(command+" "+arguments);
 		return;
 	}
 	write(client,reply.c_str(),reply.size()+1);
