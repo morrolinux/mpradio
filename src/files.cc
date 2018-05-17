@@ -154,7 +154,6 @@ void load_playback_status()
  */
 void update_now_playing()
 {
-	if(ps.repeat) return;
 	ofstream playing;
 	playing.open("/pirateradio/now_playing");
 	playing<<"SONG_NAME='"<<ps.songName<<"'\n"

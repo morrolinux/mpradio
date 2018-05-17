@@ -70,6 +70,8 @@ int poll_control_pipe() {
     }else if(command.compare("PLAY") == 0){		//TRIAL (works but meh..)
 	    if(!(arguments[0] == '/')) return -1;
 	    ps.songPath = arguments;
+	    size_t found = arguments.find_last_of("/");
+	    ps.songName = arguments.substr(found+1);
 	    ps.repeat = true;
 	    ps.playbackPosition = 0;
 	    get_file_format(arguments);
