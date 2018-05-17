@@ -198,7 +198,7 @@ int play_bt(string device)
 	update_now_playing();
 	
 	string cmdline="arecord -D bluealsa:HCI=hci0,DEV="+device+" -f cd -c 2 | sox -t raw -v "+s.btGain+" -G -b 16 -e signed -c 2 -r 44100 - -t wav - "+sox_params+" | "+output;
-	cout<<"CMDLINE: "<<cmdline;
+	cout<<"CMDLINE: "<<cmdline<<endl;
 	//string cmdline="arecord -D bluealsa -f cd -c 2 | sox -t raw -v "+s.btGain+" -G -b 16 -e signed -c 2 -r 44100 - -t wav - "+sox_params+" | "+output;  //legacy mode
 
 	system(cmdline.c_str());
