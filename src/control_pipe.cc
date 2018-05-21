@@ -7,7 +7,7 @@ using namespace std;
 #include "control_pipe.h"
 #include "datastruct.h"
 #include "files.h"
-#define CTL_BUFFER_SIZE 100
+#define CTL_BUFFER_SIZE 300
 
 FILE *f_ctl;
 extern playbackStatus ps;
