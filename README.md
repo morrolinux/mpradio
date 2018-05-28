@@ -19,7 +19,7 @@ Exclusively tested on Minimal Raspbian (ARM)
 - [x] Read Only mode for saving sdcard from corruption when unplugging AC
 - [x] PiFmAdv (optional)(experimental) implementation for better signal purity 
 - [ ] Display Android notifications over RDS?
-- [ ] Bluetooth companion app (for android) 
+- [ ] Bluetooth companion app for android (Work in progress...) 
 - [ ] Automatically partition the sdcard for a dedicated mp3 storage space (instead of using a USB drive)
 
 # Known issues
