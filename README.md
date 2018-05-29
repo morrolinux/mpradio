@@ -96,7 +96,7 @@ Example:
 
 ## Bluetooth companion app 
 
-I'll post the source code once it's mature enough, but you can test an alpha version [here](http://www.mediafire.com/file/2gyg6t33q7r3qat/mpradio_remote-0.1.apk)
+I'll post the source code once it's mature enough, but you can test an alpha version [here](http://www.mediafire.com/file/no44k0ovmfwfnga/mpradio_remote-0.1.apk)
 
 NB: I haven't handled all corner conditions yet, so crashes may occour.
 
