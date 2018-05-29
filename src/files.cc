@@ -47,12 +47,14 @@ int get_process_output_line(string cmd,string &output){
  * and saves the elements in pqueue (play queue)
  */
 
-void get_list()
+void media_scan()
 {
 	FILE *fp;
 	const int line_size=400;
 	char line[line_size];
 	string result;
+	remove(PSFILE);
+	ps.songIndex=0;
 
 	string cmd = "find \"" + s.storage + "\" -not -path \'*/\\.*\' -iname *." + s.format + "|sort -V";
 	fp = popen(cmd.c_str(), "r");
@@ -86,6 +88,7 @@ void save_list(int qsize)
 	it=pqueue.begin();
 
 	for(int i=0; i<qsize; i++){
+		cout<<"Saving: "<<*it<<endl;
 		list<<*it<<endl;
 		advance (it,1);
 	}

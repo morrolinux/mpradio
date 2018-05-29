@@ -1,7 +1,7 @@
 #pragma once
 
 void save_list(int qsize);
-void get_list();
+void media_scan();
 void load_saved_list();
 int get_file_size(string filename);
 int get_file_bs(int filesize,float fileduration);

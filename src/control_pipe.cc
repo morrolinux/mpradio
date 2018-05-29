@@ -9,6 +9,7 @@ using namespace std;
 #include "control_pipe.h"
 #include "datastruct.h"
 #include "files.h"
+#include "player.h"
 #define CTL_BUFFER_SIZE 300
 
 FILE *f_ctl;
@@ -69,7 +70,7 @@ int poll_control_pipe() {
 	    s.resumePlayback = true;
 	    ps.resumed = false;
 	    killpg(ps.pid,15);
-    }else if(command.compare("PLAY") == 0){		//TRIAL (works but meh..)
+    }else if(command.compare("PLAY") == 0){		//TODO: Implement HasSet array type and link the path to the index in playlist
 	    if(!(arguments[0] == '/')) return -1;
 	    ps.songPath = arguments;
 	    size_t found = arguments.find_last_of("/");
@@ -83,9 +84,9 @@ int poll_control_pipe() {
     }else if(command.compare("SCAN") == 0){
         if(arguments[0] != '/') return -1;
         s.storage=arguments;
+        media_scan();
+		set_next_element();
         ps.reloading=true;
-        get_list();
-        remove(PSFILE);
         killpg(ps.pid,15);
     }
 

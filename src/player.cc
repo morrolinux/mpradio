@@ -131,7 +131,7 @@ int play_storage()
 		load_saved_list();
         qsize=pqueue.size();
 	  	if(qsize <= 0){
-			get_list();										/**< generate a file list into pqueue */
+            media_scan();										/**< generate a file list into pqueue */
 			qsize=pqueue.size();
 		}
 
