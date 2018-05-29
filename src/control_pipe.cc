@@ -60,7 +60,7 @@ int poll_control_pipe() {
     }else if(command.compare("SEEK") == 0){
 	    if(!(arguments[0] == '+' || arguments[0] == '-')) return -1;
 
-	    ps.repeat = true;
+	    ps.reloading = true;
 
 	    ps.playbackPosition = ps.playbackPosition + stoi(arguments,&sz);
 	    if(ps.playbackPosition < 0)
@@ -74,7 +74,7 @@ int poll_control_pipe() {
 	    ps.songPath = arguments;
 	    size_t found = arguments.find_last_of("/");
 	    ps.songName = arguments.substr(found+1);
-	    ps.repeat = true;
+	    ps.reloading = true;
 	    ps.playbackPosition = 0;
 	    get_file_format(arguments);
     	    s.resumePlayback = true;
@@ -83,9 +83,9 @@ int poll_control_pipe() {
     }else if(command.compare("SCAN") == 0){
         if(arguments[0] != '/') return -1;
         s.storage=arguments;
-        ps.repeat=true;
+        ps.reloading=true;
         get_list();
-        remove("/pirateradio/ps");
+        remove(PSFILE);
         killpg(ps.pid,15);
     }
 

@@ -139,7 +139,7 @@ void load_playback_status()
 {
 	if(ps.resumed) return;		/**< don't do anything if already restored */
 
-	ifstream psfile("/pirateradio/ps");
+	ifstream psfile(PSFILE);
 	if (psfile.is_open()){
 		psfile>>ps.songIndex;
 		psfile>>ps.playbackPosition;
@@ -155,7 +155,7 @@ void load_playback_status()
 void update_now_playing()
 {
 	ofstream playing;
-	playing.open("/pirateradio/now_playing");
+	playing.open(NOW_PLAYING);
 	playing<<"SONG_NAME='"<<ps.songName<<"'\n"
 		   <<"SONG_YEAR='"<<ps.songYear<<"'\n"
 		   <<"ALBUM_NAME='"<<ps.songAlbum<<"'\n"
@@ -167,14 +167,14 @@ void update_now_playing()
 void update_playback_status()
 {
 	if(!s.resumePlayback) return;
-	if(ps.repeat);
+	if(ps.reloading);
 
 	unsigned int seconds = 5;
 	ofstream psfile;
 	while (true){
 		sleep(seconds);
 		ps.playbackPosition+=5;
-		psfile.open("/pirateradio/ps");
+		psfile.open(PSFILE);
 		psfile<<ps.songIndex<<" "<<ps.playbackPosition<<endl;
 		psfile.close();
 	}
@@ -187,7 +187,7 @@ void update_playback_status()
  */
 void read_tag_to_status(string songpath)
 {
-	if(ps.repeat) return;
+	if(ps.reloading) return;
 	ID3_Tag tag(songpath.c_str());
 
 	ps.songPath = songpath;
@@ -206,9 +206,19 @@ void read_tag_to_status(string songpath)
 
 void get_file_format(string songpath)
 {
-	//if(ps.repeat) return;
+	//if(ps.reloading) return;
 	size_t found = songpath.find_last_of(".");
 	string format = songpath.substr(found+1);
 	cout<<"FORMAT: "<<format<<endl;
 	ps.fileFormat = format;
+}
+
+void control_pipe_setup()
+{
+	cout<<"CONTROL_PIPE_SETUP";
+	mkfifo(RDS_CTL,S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
+	chmod(RDS_CTL,0777);
+	mkfifo(MPRADIO_CTL,S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
+	chmod(MPRADIO_CTL,0777);
+	mkfifo(MPRADIO_STREAM,S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
 }

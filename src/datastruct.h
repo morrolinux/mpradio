@@ -5,6 +5,7 @@ constexpr auto MPRADIO_CTL= "/home/pi/mpradio_ctl";
 constexpr auto MPRADIO_STREAM = "/home/pi/mpradio_stream";
 constexpr auto PSFILE = "/pirateradio/ps";
 constexpr auto PLAYLIST = "/pirateradio/playlist";
+constexpr auto NOW_PLAYING = "/pirateradio/now_playing";
 
 /** setting datastructure */
 
@@ -37,5 +38,5 @@ struct playbackStatus{
 	int songIndex=0;
 	int playbackPosition=0;
 	bool resumed=false;
-	bool repeat=false;
+	bool reloading=false;
 };

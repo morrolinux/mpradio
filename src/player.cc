@@ -3,7 +3,7 @@
 #include <list>
 #include <thread>
 #include <sys/stat.h>
-#include <stdio.h>
+#include <cstdio>
 #include <unistd.h>
 #include <sys/wait.h>
 using namespace std;
@@ -11,28 +11,18 @@ using namespace std;
 #include "files.h"
 #include "control_pipe.h"
 
-unsigned int microseconds = 500000;
+constexpr int microseconds = 500000;
 
 extern settings s;
-list<string> pqueue;
-list<string>::iterator it;
 playbackStatus ps;
+list<string>::iterator it;
+list<string> pqueue;
 int qsize;
-
-void legacy_rds_init()
-{
-	cout<<"LEGACY_RDS_INIT";
-	mkfifo(RDS_CTL,S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
-	chmod(RDS_CTL,0777);
-	mkfifo(MPRADIO_CTL,S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
-	chmod(MPRADIO_CTL,0777);
-	mkfifo(MPRADIO_STREAM,S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
-}
 
 void set_next_element()
 {
-	if(ps.repeat) return;
-	int qsize=pqueue.size();
+	if(ps.reloading) return;
+	qsize=pqueue.size();
 
 	/** determine how the next song should be choosen */
 	if(s.resumePlayback && !ps.resumed){
@@ -52,7 +42,7 @@ void set_next_element()
 /**
   * DO NOT HINIBIT THIS FUNCTION
   */
-string trim_audio_track(string path)
+string trim_audio_track(const string &path)
 {
 	string trim="";
 	int filesize=get_file_size(path);
@@ -60,7 +50,7 @@ string trim_audio_track(string path)
 	int bs=get_file_bs(filesize,duration);
 	if(bs == 0) bs=4;
 
-	if(s.resumePlayback && !ps.resumed){
+	if(s.resumePlayback && !ps.resumed && ps.fileFormat != "flac"){
 		if(ps.playbackPosition >= 5)		/**< resume few seconds back */
 			ps.playbackPosition-=5;
 
@@ -100,7 +90,7 @@ void set_effects(string &sox_params)
 		sox_params+="treble "+s.treble;
 }
 
-int fork_process(string cmd){
+int fork_process(const string &cmd){
 	pid_t pid = fork();
 	if (pid == 0){
 		//child process
@@ -131,7 +121,7 @@ int play_storage()
 {
 	bool repeat = true;
 	srand (time(NULL));
-	legacy_rds_init();
+	control_pipe_setup();
 
 	load_playback_status();		/**< retrive songIndex and playbackPosition from ps file */
 	thread persistPlayback (update_playback_status);	/**< this will keep updated the ps file with current index:position */
@@ -140,7 +130,7 @@ int play_storage()
 	while(repeat){
 		load_saved_list();
         qsize=pqueue.size();
-	  if(qsize <= 0){
+	  	if(qsize <= 0){
 			get_list();										/**< generate a file list into pqueue */
 			qsize=pqueue.size();
 		}
@@ -173,15 +163,15 @@ int play_storage()
 
 			update_now_playing();
 
-			ps.repeat=false;
+			ps.reloading=false;
 			fork_process(cmdline);
 
-			if(ps.repeat) continue;
+			if(ps.reloading) continue;
 			cout<<"removing played song from playlist...\n";
 			pqueue.erase(it);	/**< shorten the playlist and save it after playback */
 			qsize--;
 			save_list(qsize);
-			remove("/pirateradio/ps");	/**< removing playback status file as not needed when playback ends */
+			remove(PSFILE);	/**< removing playback status file as not needed when playback ends */
 		}
 	}
 	close_control_pipe();
