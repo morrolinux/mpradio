@@ -92,6 +92,13 @@ Example:
 * Play a song on demand: `echo "PLAY /absolute/path/to/song.mp3" > mpradio_ctl`
 * Skip the current song:  `echo "SKIP" > mpradio_ctl`
 * Seek the track forward or backwards: `echo "SEEK +10" > mpradio_ctl`  or  `echo "SEEK -10" > mpradio_ctl`
+* Play all songs within a folder (via media scan): `echo "SCAN /absolute/path/to/folder/" > mpradio_ctl`
+
+## Bluetooth companion app 
+
+I'll post the source code once it's mature enough, but you can test an alpha version [here](http://www.mediafire.com/file/2gyg6t33q7r3qat/mpradio_remote-0.1.apk)
+
+NB: I haven't handled all corner conditions yet, so crashes may occour.
 
 # Updating 
 ` cd mpradio-master/install && sudo ./install.sh update `
