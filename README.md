@@ -18,6 +18,7 @@ Exclusively tested on Minimal Raspbian (ARM)
 - [x] Multiple file format support [mp3/wav/flac]
 - [x] Read Only mode for saving sdcard from corruption when unplugging AC
 - [x] PiFmAdv (optional)(experimental) implementation for better signal purity 
+- [x] Control pipe commands (explained below)
 - [ ] Display Android notifications over RDS?
 - [ ] Bluetooth companion app for android (Work in progress...) 
 - [ ] Automatically partition the sdcard for a dedicated mp3 storage space (instead of using a USB drive)
@@ -83,6 +84,14 @@ If you add new songs on the USB stick, with "persistentPlaylist" enabled they wo
 - You're done! (`mpradio` will rebuild the playlist, counting the new files as well)
   
 Also, please remember that (though it would be probably illegal) you can test FM broadcasting by plugging a 20cm wire on the **GPIO 4** of your Pi.
+
+## Control pipe
+You can perform certain operations while mpradio.service is running by simply writing to mpradio_ctl
+
+Example:
+* Play a song on demand: `echo "PLAY /absolute/path/to/song.mp3" > mpradio_ctl`
+* Skip the current song:  `echo "SKIP" > mpradio_ctl`
+* Seek the track forward or backwards: `echo "SEEK +10" > mpradio_ctl`  or  `echo "SEEK -10" > mpradio_ctl`
 
 # Updating 
 ` cd mpradio-master/install && sudo ./install.sh update `
