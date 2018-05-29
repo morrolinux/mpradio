@@ -78,7 +78,12 @@ int poll_control_pipe() {
     	    s.resumePlayback = true;
 	    ps.resumed = false;
 	    killpg(ps.pid,15);
-}
+		}else if(command.compare("SCAN") == 0){
+			if(!(arguments[0] == '/')) return -1;
+			s.storage=arguments;
+			get_list();
+			killpg(ps.pid,15);
+		}
 
     return 0;
 }
