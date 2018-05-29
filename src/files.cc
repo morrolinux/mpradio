@@ -33,7 +33,7 @@ int get_process_output_line(string cmd,string &output){
 
 	if(WIFEXITED(st)) 
 		exitcode=WEXITSTATUS(st);
-
+	
 	if(exitcode != 0)
 		output="";
 	else
@@ -67,6 +67,7 @@ void get_list()
 		pqueue.push_back(s);
 	}
 	pclose(fp);
+	save_list(pqueue.size());	//saving the list to file before even playing (that's for the remote)
 }
 
 
