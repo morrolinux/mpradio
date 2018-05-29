@@ -13,14 +13,11 @@ using namespace std;
 
 unsigned int microseconds = 500000;
 
-constexpr auto RDS_CTL= "/home/pi/rds_ctl";
-constexpr auto MPRADIO_CTL= "/home/pi/mpradio_ctl";
-constexpr auto MPRADIO_STREAM = "/home/pi/mpradio_stream";
-
 extern settings s;
 list<string> pqueue;
 list<string>::iterator it;
 playbackStatus ps;
+int qsize;
 
 void legacy_rds_init()
 {
@@ -52,7 +49,7 @@ void set_next_element()
 	ps.songPath=*it;
 }
 
-/** 
+/**
   * DO NOT HINIBIT THIS FUNCTION
   */
 string trim_audio_track(string path)
@@ -135,14 +132,18 @@ int play_storage()
 	bool repeat = true;
 	srand (time(NULL));
 	legacy_rds_init();
-	
+
 	load_playback_status();		/**< retrive songIndex and playbackPosition from ps file */
 	thread persistPlayback (update_playback_status);	/**< this will keep updated the ps file with current index:position */
 	open_control_pipe(MPRADIO_CTL);
 
 	while(repeat){
-		get_list();		/**< generate a file list into pqueue */
-		int qsize=pqueue.size();
+		load_saved_list();
+        qsize=pqueue.size();
+	  if(qsize <= 0){
+			get_list();										/**< generate a file list into pqueue */
+			qsize=pqueue.size();
+		}
 
 		string sox="sox -v "+s.storageGain+" -r 44100 -G ";
 		string sox_params=" - -t wav - ";
@@ -151,9 +152,9 @@ int play_storage()
 		string pifm2=s.opSwitch+"rt";
 		string pifm3=s.opSwitch+"audio - "+s.opSwitch+"freq";
 		string output="";
-		
+
 		if(qsize <= 0) repeat=false;		/**< infinite loop protection if no file are present */
-		
+
 		while(qsize > 0)
 		{
 			set_next_element();
@@ -161,15 +162,15 @@ int play_storage()
 			cout<<endl<<"PLAY: "<<ps.songPath<<endl;
 			get_file_format(ps.songPath);
 			read_tag_to_status(ps.songPath);
-			
-			string trim=trim_audio_track(ps.songPath); 
-			
+
+			string trim=trim_audio_track(ps.songPath);
+
 			output=pifm1+" "+"\""+ps.songName+"\""+" "+pifm2+" "+"\""+ps.songName+"\""+" "+pifm3+" "+s.freq;
 			set_output(output);			/**< change output device if specified */
-	
+
 			string cmdline=trim+sox+" -t "+ps.fileFormat+sox_params+" | "+output;
 			cout<<"CMDLINE: "<<cmdline<<endl;
-	
+
 			update_now_playing();
 
 			ps.repeat=false;
@@ -196,7 +197,7 @@ int play_bt(string device)
 
 	ps.songName = "Bluetooth";
 	update_now_playing();
-	
+
 	string cmdline="arecord -D bluealsa:HCI=hci0,DEV="+device+" -f cd -c 2 | sox -t raw -v "+s.btGain+" -G -b 16 -e signed -c 2 -r 44100 - -t wav - "+sox_params+" | "+output;
 	cout<<"CMDLINE: "<<cmdline<<endl;
 	//string cmdline="arecord -D bluealsa -f cd -c 2 | sox -t raw -v "+s.btGain+" -G -b 16 -e signed -c 2 -r 44100 - -t wav - "+sox_params+" | "+output;  //legacy mode
@@ -204,4 +205,3 @@ int play_bt(string device)
 	system(cmdline.c_str());
 	return 0;
 }
-

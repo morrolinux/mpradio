@@ -3,6 +3,8 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <signal.h>
+
 using namespace std;
 #include "control_pipe.h"
 #include "datastruct.h"
@@ -78,7 +80,14 @@ int poll_control_pipe() {
     	    s.resumePlayback = true;
 	    ps.resumed = false;
 	    killpg(ps.pid,15);
-}
+    }else if(command.compare("SCAN") == 0){
+        if(arguments[0] != '/') return -1;
+        s.storage=arguments;
+        ps.repeat=true;
+        get_list();
+        remove("/pirateradio/ps");
+        killpg(ps.pid,15);
+    }
 
     return 0;
 }

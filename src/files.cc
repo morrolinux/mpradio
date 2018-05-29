@@ -11,12 +11,12 @@ using namespace std;
 #include "files.h"
 
 #define SAFE_NULL(X) (NULL == X ? "" : X)
-constexpr auto PLAYLIST = "/pirateradio/playlist";
 
 extern settings s;
 extern list<string> pqueue;
 extern list<string>::iterator it;
 extern playbackStatus ps;
+extern int qsize;
 
 int get_process_output_line(string cmd,string &output){
 
@@ -29,9 +29,9 @@ int get_process_output_line(string cmd,string &output){
 	fp = popen(cmd.c_str(), "r");
 	fgets(line, line_size, fp);
 	output = line;
-	int st = pclose(fp); 
+	int st = pclose(fp);
 
-	if(WIFEXITED(st)) 
+	if(WIFEXITED(st))
 		exitcode=WEXITSTATUS(st);
 
 	if(exitcode != 0)
@@ -43,30 +43,30 @@ int get_process_output_line(string cmd,string &output){
 }
 
 /**
- * creates a file list each time it is launched 
+ * creates a file list each time it is launched
  * and saves the elements in pqueue (play queue)
  */
 
 void get_list()
 {
-	load_saved_list();		
-	if(pqueue.size() != 0)
-		return;
-
 	FILE *fp;
-	const int line_size=200;
+	const int line_size=400;
 	char line[line_size];
 	string result;
 
-        string cmd = "find " + s.storage + " -not -path \'*/\\.*\' -iname *." + s.format + "|sort -V";
+	string cmd = "find \"" + s.storage + "\" -not -path \'*/\\.*\' -iname *." + s.format + "|sort -V";
 	fp = popen(cmd.c_str(), "r");
 
+	pqueue.clear();
 	while (fgets(line, line_size, fp)){
 		string s = line;
 		s=s.erase(s.find('\n'));	//remove lewline char
+        cout<<"Adding: "<<s<<endl;
 		pqueue.push_back(s);
 	}
 	pclose(fp);
+    qsize=pqueue.size();
+	save_list(qsize);
 }
 
 
@@ -118,7 +118,7 @@ float get_song_duration(string path)
 {
 	string cmd="soxi -D \""+path+"\"";
 	string s;
-	if(get_process_output_line(cmd,s) !=0 )		
+	if(get_process_output_line(cmd,s) !=0 )
 		return -1;		/**< make sure no valid duration is returned if the file does not exist/cannot be opened */
 
 	float sd = strtof((s).c_str(),0);
@@ -150,7 +150,7 @@ void load_playback_status()
 	}
 }
 
-/*! \brief Update the ~/now_playing file to communicate metadata of current song. 
+/*! \brief Update the ~/now_playing file to communicate metadata of current song.
  */
 void update_now_playing()
 {
@@ -189,7 +189,7 @@ void read_tag_to_status(string songpath)
 {
 	if(ps.repeat) return;
 	ID3_Tag tag(songpath.c_str());
-	
+
 	ps.songPath = songpath;
 	ps.songName = SAFE_NULL(ID3_GetTitle( &tag ));
 	ps.songArtist = SAFE_NULL(ID3_GetArtist( &tag ));
@@ -197,10 +197,11 @@ void read_tag_to_status(string songpath)
 	ps.songYear = SAFE_NULL(ID3_GetYear( &tag ));
 
 	if(ps.songName.empty()) {
-		size_t found = songpath.find_last_of("/");	/**< extract song name out of the absolute file path */
+		size_t found = songpath.find_last_of("/");	// extract song name out of the absolute file path
 		string songname=songpath.substr(found+1);
-		ps.songName=songname;			
+		ps.songName=songname;
 	}
+ 
 }
 
 void get_file_format(string songpath)
@@ -211,5 +212,3 @@ void get_file_format(string songpath)
 	cout<<"FORMAT: "<<format<<endl;
 	ps.fileFormat = format;
 }
-
-

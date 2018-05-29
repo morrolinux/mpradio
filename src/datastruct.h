@@ -1,5 +1,11 @@
 #pragma once
 
+constexpr auto RDS_CTL= "/home/pi/rds_ctl";
+constexpr auto MPRADIO_CTL= "/home/pi/mpradio_ctl";
+constexpr auto MPRADIO_STREAM = "/home/pi/mpradio_stream";
+constexpr auto PSFILE = "/pirateradio/ps";
+constexpr auto PLAYLIST = "/pirateradio/playlist";
+
 /** setting datastructure */
 
 struct settings{
