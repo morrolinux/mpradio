@@ -13,14 +13,11 @@ using namespace std;
 
 unsigned int microseconds = 500000;
 
-constexpr auto RDS_CTL= "/home/pi/rds_ctl";
-constexpr auto MPRADIO_CTL= "/home/pi/mpradio_ctl";
-constexpr auto MPRADIO_STREAM = "/home/pi/mpradio_stream";
-
 extern settings s;
 list<string> pqueue;
 list<string>::iterator it;
 playbackStatus ps;
+int qsize;
 
 void legacy_rds_init()
 {
@@ -141,9 +138,9 @@ int play_storage()
 	open_control_pipe(MPRADIO_CTL);
 
 	while(repeat){
-		int qsize;
 		load_saved_list();
-	  if(qsize=pqueue.size() <= 0){
+        qsize=pqueue.size();
+	  if(qsize <= 0){
 			get_list();										/**< generate a file list into pqueue */
 			qsize=pqueue.size();
 		}

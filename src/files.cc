@@ -11,12 +11,12 @@ using namespace std;
 #include "files.h"
 
 #define SAFE_NULL(X) (NULL == X ? "" : X)
-constexpr auto PLAYLIST = "/pirateradio/playlist";
 
 extern settings s;
 extern list<string> pqueue;
 extern list<string>::iterator it;
 extern playbackStatus ps;
+extern int qsize;
 
 int get_process_output_line(string cmd,string &output){
 
@@ -50,19 +50,23 @@ int get_process_output_line(string cmd,string &output){
 void get_list()
 {
 	FILE *fp;
-	const int line_size=200;
+	const int line_size=400;
 	char line[line_size];
 	string result;
 
-        string cmd = "find " + s.storage + " -not -path \'*/\\.*\' -iname *." + s.format + "|sort -V";
+	string cmd = "find \"" + s.storage + "\" -not -path \'*/\\.*\' -iname *." + s.format + "|sort -V";
 	fp = popen(cmd.c_str(), "r");
 
+	pqueue.clear();
 	while (fgets(line, line_size, fp)){
 		string s = line;
 		s=s.erase(s.find('\n'));	//remove lewline char
+        cout<<"Adding: "<<s<<endl;
 		pqueue.push_back(s);
 	}
 	pclose(fp);
+    qsize=pqueue.size();
+	save_list(qsize);
 }
 
 
@@ -193,10 +197,11 @@ void read_tag_to_status(string songpath)
 	ps.songYear = SAFE_NULL(ID3_GetYear( &tag ));
 
 	if(ps.songName.empty()) {
-		size_t found = songpath.find_last_of("/");	/**< extract song name out of the absolute file path */
+		size_t found = songpath.find_last_of("/");	// extract song name out of the absolute file path
 		string songname=songpath.substr(found+1);
 		ps.songName=songname;
 	}
+ 
 }
 
 void get_file_format(string songpath)
