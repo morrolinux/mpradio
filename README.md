@@ -102,9 +102,18 @@ NB: I haven't handled all corner conditions yet, so crashes may occour.
 
 Screenshots:
 
-![MPRadio Remote App screenshots](/doc/app/UI.png?raw=true "MPRadio Remote")
-![MPRadio Remote App screenshots](/doc/app/swipe_song.png?raw=true "MPRadio Remote")
-![MPRadio Remote App screenshots](/doc/app/mpradio_settings.png?raw=true "MPRadio Remote")
+<div class="row">
+  <div class="column">
+    <img src="/doc/app/UI.png" width="280" height="480">
+  </div>
+  <div class="column">
+    <img src="/doc/app/swipe_song.png" width="280" height="480">
+  </div>
+  <div class="column">
+    <img src="/doc/app/mpradio_settings.png" width="280" height="480">
+  </div>
+</div>
+
 
 # Updating 
 ` cd mpradio-master/install && sudo ./install.sh update `
