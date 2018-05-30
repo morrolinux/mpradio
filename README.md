@@ -100,6 +100,12 @@ I'll post the source code once it's mature enough, but you can test an alpha ver
 
 NB: I haven't handled all corner conditions yet, so crashes may occour.
 
+Screenshots:
+
+![MPRadio Remote App screenshots](/doc/app/UI.png?raw=true "MPRadio Remote")
+![MPRadio Remote App screenshots](/doc/app/swipe_song.png?raw=true "MPRadio Remote")
+![MPRadio Remote App screenshots](/doc/app/mpradio_settings.png?raw=true "MPRadio Remote")
+
 # Updating 
 ` cd mpradio-master/install && sudo ./install.sh update `
 
@@ -148,7 +154,7 @@ If you are having issues with Bluetooth not connecting once it's paired, please 
 
 A simple schematic of how things work together:
 
-![Alt text](/doc/mpradio_schematic.png?raw=true "mpradio schematic")
+![MPRadio schematic](/doc/mpradio_schematic.png?raw=true "mpradio schematic")
 
 # Warning and Disclaimer
 `mpradio` relies on PiFmRds for FM-Streaming feature. Please note that in most states, transmitting radio waves without a state-issued licence specific to the transmission modalities (frequency, power, bandwidth, etc.) is illegal. Always use a shield between your radio receiver and the Raspberry. Never use an antenna. See PiFmRds Waring and Disclamer for more information.
