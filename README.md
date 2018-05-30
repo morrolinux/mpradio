@@ -102,18 +102,7 @@ NB: I haven't handled all corner conditions yet, so crashes may occour.
 
 Screenshots:
 
-<div class="row">
-  <div class="column">
-    <img src="/doc/app/UI.png" width="25%" height="25%">
-  </div>
-  <div class="column">
-    <img src="/doc/app/swipe_song.png" width="25%" height="25%">
-  </div>
-  <div class="column">
-    <img src="/doc/app/mpradio_settings.png" width="25%" height="25%">
-  </div>
-</div>
-
+![UI](/doc/app/UI.png "UI") ![UI](/doc/app/swipe_song.png "Swipe Song") ![UI](/doc/app/mpradio_settings.png "mpradio_settings")
 
 # Updating 
 ` cd mpradio-master/install && sudo ./install.sh update `
