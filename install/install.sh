@@ -5,6 +5,8 @@
 # Otherwise, it might begin corrupt execution using sudo ...
 update_script() {
 	sleep 1
+	rm -rf /usr/local/src/PiFmAdv/src/pi_fm_adv	# Make sure PiFm is being updated as well
+	rm -rf /usr/local/src/PiFmAdv/src/pi_fm_rds
 	git fetch origin
 	git reset --hard origin/master
 	cd install # If we are already in the install directory, this is OK
