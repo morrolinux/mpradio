@@ -27,8 +27,6 @@ Exclusively tested on Minimal Raspbian (ARM)
 - Due to a design flaw in BCM43438 WIFI/BT chipset, you might need to disable WiFi if you experience BT audio stuttering on Pi Zero W and Pi 3: https://github.com/raspberrypi/linux/issues/1402
 - Boot can take as long as 1m30s on the Pi 1 and 2 due to BT UART interface missing on the board.
   Reducing systemd timeout with `echo "DefaultTimeoutStartSec=40s" >> /etc/systemd/system.conf` should help
-- PiFmAdv implementation (experimental) is really unstable on latest firmwares. installing an older one with
-`rpi-update fa19f1c6b3ea5d09fb30e0b38a69199eed210bb4` should help
 
 # Installation
 First make sure your Raspbian is up to date:
@@ -51,7 +49,7 @@ btGain=1.7            	;gain setting for bluetooth streaming
 storageGain=1         	;gain setting for stored files streaming
 output=fm		            ;[fm/analog] for FM output or 3.5 mm jack output
 btBoost=false		        ;Enhance Bluetooth audio. This might add a little latency
-implementation=pi_fm_rds	;[pi_fm_rds/pi_fm_adv] - pi_fm_adv (experimental) has a much cleaner sound but it's quite unstable
+implementation=pi_fm_rds	;[pi_fm_rds/pi_fm_adv] - pi_fm_adv has a much cleaner sound
 
 [PLAYLIST]
 persistentPlaylist=true
