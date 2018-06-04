@@ -42,10 +42,6 @@ echo "MODE: ${MODE}" 1>&2
 case "${MODE}" in
 put)
 	FILE="${SUB_PATH}${NAME}"
-	#echo "script: testing ${FILE}..." 1>&2
-	#test -z "${FILE}" && exit 1
-	#echo "script: testing for existence of ${FILE}..." 1>&2
-	#test -e "${FILE}" && exit 1
 
 	#tell obexpushd to go on
 	echo "OK"
@@ -57,11 +53,11 @@ put)
 	if [[ $NAME == "pirateradio.config" ]]
 	then
 		systemctl restart mpradio
-	elif [[ $NAME == "cmd.txt" ]]
-	then
-		bash /pirateradio/$NAME
-	fi
-
+	elif [[ "$NAME" == *.zip || "$NAME" == *.rar ]]
+        then
+                unp "/pirateradio/$NAME" <<<A
+                rm -f "/pirateradio/$NAME"
+        fi
 	
 	#setfattr -n "user.mime_type" -v "${MIMETYPE}" "${FILE}"
 	sleep 1
@@ -75,11 +71,6 @@ get)
 
 	stat --printf="Length: %s\n" ${FILE}
 	stat --format="%y" "${FILE}" | date -u +"Time: %Y%m%dT%H%M%SZ"
-
-#	MIMETYPE=$(getfattr -n "user.mime_type" "${FILE}")
-#	if [ "${MIMETYPE}" ]; then
-#	    echo "Type: ${MIMETYPE}"
-#	fi
 
 	echo ""
 	cat "${FILE}"
