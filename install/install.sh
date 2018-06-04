@@ -42,25 +42,11 @@ fi
 
 if [[ $remove != "some" ]]; then
 	#Installing software dependencies...
-	apt-get -y $INSTALL libbluetooth-dev bluez pi-bluetooth python-gobject python-gobject-2 bluez-tools sox crudini libsox-fmt-mp3 python-dbus bluealsa obexpushd libid3-dev
+	apt-get -y $INSTALL libbluetooth-dev bluez pi-bluetooth python-gobject python-gobject-2 bluez-tools sox crudini libsox-fmt-mp3 python-dbus bluealsa obexpushd libid3-dev unp
 	apt-get -y remove pulseaudio
 	
 	#Installing software needed to compile PiFmRDS..
 	apt-get -y $INSTALL git libsndfile1-dev
-fi
-
-#Setting rules...
-BLACKLIST="/etc/modprobe.d/blacklist.conf"
-blacklistline="# Blacklist ipv6 for mpradio"
-#No need to check first - we'll just remove blacklists starting with comment we added.
-#$(grep "blacklist snd_bcm2835" $BLACKLIST -n|cut -d: -f1)
-if [[ ! $remove ]]; then
-	#echo "blacklist snd_bcm2835" >> $BLACKLIST	#no need to blacklist since pulseaudio removal
-	echo "$blacklistline" >> "$BLACKLIST"
-	echo "blacklist ipv6" >> "$BLACKLIST"
-else
-	# Remove all instances starting with comment line
-	sed -i.bak "/${blacklistline}/,+1 d" "$BLACKLIST"
 fi
 
 INPUT="/etc/udev/rules.d/99-input.rules"
