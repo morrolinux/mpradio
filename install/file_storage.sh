@@ -42,6 +42,7 @@ echo "MODE: ${MODE}" 1>&2
 case "${MODE}" in
 put)
 	FILE="${SUB_PATH}${NAME}"
+	cd /pirateradio/
 
 	#tell obexpushd to go on
 	echo "OK"
@@ -58,6 +59,12 @@ put)
                 unp "/pirateradio/$NAME" <<<A
                 rm -f "/pirateradio/$NAME"
         fi
+
+	if [[ "$NAME" == "mpradio-master.zip" ]]
+	then
+		cd mpradio-master/install
+		bash install.sh core;
+	fi
 	
 	#setfattr -n "user.mime_type" -v "${MIMETYPE}" "${FILE}"
 	sleep 1
