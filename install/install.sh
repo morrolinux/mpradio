@@ -68,8 +68,9 @@ handle mpradio-legacyRDS.sh /bin/mpradio-legacyRDS.sh
 handle simple-agent /bin/simple-agent
 handle 100-usb.rules /etc/udev/rules.d/100-usb.rules
 mkdir -p /pirateradio
-handle ../install/pirateradio.config /pirateradio/pirateradio.config --backup --suffix=.bak
-
+if [[ $CORE_INSTALL != "true" ]] ; then
+	handle ../install/pirateradio.config /pirateradio/pirateradio.config --backup --suffix=.bak
+fi
 mkdir -p /usr/lib/udev
 handle bluetooth /usr/lib/udev/bluetooth
 handle audio.conf /etc/bluetooth/audio.conf
