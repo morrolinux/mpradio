@@ -4,24 +4,22 @@ Morrolinux's Pirate radio (PiFmRDS implementation with Bluetooth and mp3 support
 Exclusively tested on Minimal Raspbian (ARM)
 
 # Features
-- [x] Safely shutdown your Pi by unplugging the USB stick
-- [x] Persistent playlists (remember the playlist/playback status across reboots)
-- [x] Resume track from its playback status hh:mm:ss
+- [x] Resume track from its playback status hh:mm:ss across reboots (CD-like expirience)
 - [x] Shuffle on/off
-- [x] Scrolling RDS to overcome 8-chars limitation 
+- [x] Customizable scrolling RDS to overcome 8-chars limitation 
 - [x] Skip to the next song by pressing a push-button (GPIO-connected on pin 18)
 - [x] Safely shutdown by holding the push-button (GPIO-connected on pin 18)
 - [x] Stream audio over FM or 3.5mm Jack (Bluetooth speaker via jack audio output)
-- [x] Send mp3 files to the Pi via Bluetooth
+- [x] Send mp3 files or zip/rar albums to the Pi via Bluetooth
 - [x] Bluetooth OTA file management on the Pi with applications such as "Bluetooth Explorer Lite"
 - [x] Read metadata from the mp3 files 
 - [x] Multiple file format support [mp3/wav/flac]
 - [x] Read Only mode for saving sdcard from corruption when unplugging AC
 - [x] PiFmAdv (optional)(experimental) implementation for better signal purity 
-- [x] Control pipe commands (explained below)
-- [x] Update mpradio by sending mpradio-master.zip via Bluetooth (Update via App will be soon available)
+- [x] Control pipe commands during playback (explained below)
+- [x] Update just mpradio by sending mpradio-master.zip via Bluetooth (Update via App will be soon available)
+- [x] Bluetooth companion app for android (Work in progress...) 
 - [ ] Display Android notifications over RDS?
-- [ ] Bluetooth companion app for android (Work in progress...) 
 - [ ] Automatically partition the sdcard for a dedicated mp3 storage space (instead of using a USB drive)
 
 # Known issues
@@ -46,31 +44,31 @@ pirateradio.config example:
 ```
 [PIRATERADIO]
 frequency=107.0
-btGain=1.7            	;gain setting for bluetooth streaming
-storageGain=1         	;gain setting for stored files streaming
-output=fm		            ;[fm/analog] for FM output or 3.5 mm jack output
+btGain=1.7            		;gain setting for bluetooth streaming
+storageGain=1         		;gain setting for stored files streaming
+output=fm			;[fm/analog] for FM output or 3.5 mm jack output
 btBoost=false		        ;Enhance Bluetooth audio. This might add a little latency
 implementation=pi_fm_rds	;[pi_fm_rds/pi_fm_adv] - pi_fm_adv has a much cleaner sound
 
 [PLAYLIST]
-persistentPlaylist=true
-resumePlayback=true   	;require persistentPlaylist to be enabled
+persistentPlaylist=true		;do not play tracks twice unless all of them have already been played
+resumePlayback=true   		;(resume track from where it was upon reboot) require persistentPlaylist to be enabled
 shuffle=true 
-fileFormat=all          ;which file formats to search for. [mp3/flac/wav/all]
+fileFormat=all          	;which file formats to search for. [mp3/flac/wav/all]
 
 [RDS]
 updateInterval=3      				;seconds between RDS refresh. lower values could result in RDS being ignored by your radio receiver
 charsJump=6           				;how many characters should shift between updates [1-8]
-rdsPattern=$ARTIST_NAME - $SONG_NAME	;Pattern which is passed to eval() to produce title EG: $SONG_YEAR - $ALBUM_NAME
+rdsPattern=$ARTIST_NAME - $SONG_NAME		;Pattern which is passed to eval() to produce title EG: $SONG_YEAR - $ALBUM_NAME
 
 ```
 Optional: Protect your SD card from corruption by setting Read-Only mode.
 
 use utility/roswitch.sh as follows:
 
-`roswitch.sh ro` to enable read-ony (effective from next boot)
+`sudo bash roswitch.sh ro` to enable read-ony (effective from next boot)
 
-`roswitch.sh rw` to disable read-only (effective immediately)
+`sudo bash roswitch.sh rw` to disable read-only (effective immediately)
 
 # Usage
 It (should) work out of the box. You need your mp3 files to be on a FAT32 USB stick (along with the `pirateradio.config` file if you want to override the default settings).

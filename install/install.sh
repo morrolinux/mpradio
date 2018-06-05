@@ -1,6 +1,7 @@
 #!/bin/bash
 
 CORE_INSTALL=""
+
 # Write this as an update script to ensure that bash
 # knows how to complete updating before it starts to.
 # Otherwise, it might begin corrupt execution using sudo ...
@@ -60,21 +61,21 @@ fi
 #Installing needed files and configurations
 handle mpradio-pushbutton-skip.py /bin/mpradio-pushbutton-skip.py
 handle need2recompile.sh /bin/need2recompile.sh
-handle mpshutdown.sh /sbin/mpshutdown.sh
 handle bt-setup.sh /bin/bt-setup.sh
 handle mpradio-legacyRDS.sh /bin/mpradio-legacyRDS.sh
 handle simple-agent /bin/simple-agent
-handle 100-usb.rules /etc/udev/rules.d/100-usb.rules
+#handle 100-usb.rules /etc/udev/rules.d/100-usb.rules	#deprecated since Read-Only mode and blueooth companion app
 mkdir -p /pirateradio
-if [[ $CORE_INSTALL != "true" ]] ; then
-	handle ../install/pirateradio.config /pirateradio/pirateradio.config --backup --suffix=.bak
-fi
 mkdir -p /usr/lib/udev
 handle bluetooth /usr/lib/udev/bluetooth
 handle audio.conf /etc/bluetooth/audio.conf
 handle main.conf /etc/bluetooth/main.conf
-handle asoundrc /home/pi/.asoundrc
 handle mpradio-bt@.service /lib/systemd/system/mpradio-bt@.service
+
+#do not update the config file if a core update is performed
+if [[ $CORE_INSTALL != "true" ]] ; then
+	handle ../install/pirateradio.config /pirateradio/pirateradio.config --backup --suffix=.bak
+fi
 
 #compile and $INSTALL mpradio_cc
 if [[ $remove ]]; then
@@ -104,7 +105,7 @@ if [[ $remove ]]; then
 	systemctl disable mpradio-legacy-rds.service
 	systemctl disable mpradio-pushbutton-skip.service
 	systemctl disable obexpushd.service
-	systemctl enable rfcomm
+	systemctl disable rfcomm
 fi
 
 #Installing service units, or uninstalling them.
@@ -147,8 +148,6 @@ else
 	cd PiFmAdv/src
 	make clean
 	make
-
-	
 fi
 
 handle /usr/local/src/PiFmRds/src/pi_fm_rds /usr/local/bin/pi_fm_rds

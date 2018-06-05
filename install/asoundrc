@@ -1,4 +1,0 @@
-defaults.bluealsa.interface "hci0"
-defaults.bluealsa.profile "a2dp"
-defaults.bluealsa.delay 10000
-defaults.bluealsa.device "MA:CA:DD:RE:SS:00"
