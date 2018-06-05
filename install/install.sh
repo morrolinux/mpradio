@@ -45,7 +45,7 @@ else
 	handle() { cp -f $@ ; }
 fi
 
-if [[ $remove != "some" || $CORE_INSTALL != "true" ]]; then
+if [[ $remove != "some" && $CORE_INSTALL != "true" ]]; then
 	#Installing software dependencies...
 	apt-get -y $INSTALL git libsndfile1-dev libbluetooth-dev bluez pi-bluetooth python-gobject python-gobject-2 bluez-tools sox crudini libsox-fmt-mp3 python-dbus bluealsa obexpushd libid3-dev unp
 	apt-get -y remove pulseaudio
