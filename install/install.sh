@@ -20,8 +20,6 @@ if [ "$(id -u)" != "0" ]; then
    exit 1
 fi
 
-systemctl stop mpradio
-
 if [[ $1 == "core" ]] ; then
 	CORE_INSTALL="true"
 elif [[ $1 == "update" ]] ; then
@@ -93,6 +91,7 @@ else
  	g++ -o rfcomm-remote rfcomm-remote.cc -lbluetooth
 fi
 
+systemctl stop mpradio
 handle mpradio /bin/mpradio
 handle rfcomm-remote /usr/local/bin/rfcomm-remote
 
