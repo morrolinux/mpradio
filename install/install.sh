@@ -1,5 +1,6 @@
 #!/bin/bash
 
+CORE_INSTALL=""
 # Write this as an update script to ensure that bash
 # knows how to complete updating before it starts to.
 # Otherwise, it might begin corrupt execution using sudo ...
@@ -19,7 +20,11 @@ if [ "$(id -u)" != "0" ]; then
    exit 1
 fi
 
-if [[ $1 == "update" ]] ; then
+systemctl stop mpradio
+
+if [[ $1 == "core" ]] ; then
+	CORE_INSTALL="true"
+elif [[ $1 == "update" ]] ; then
 	update_script
 elif [[ $1 == "remove" ]] ; then
 	remove="all"
@@ -40,13 +45,10 @@ else
 	handle() { cp -f $@ ; }
 fi
 
-if [[ $remove != "some" ]]; then
+if [[ $remove != "some" || $CORE_INSTALL != "true" ]]; then
 	#Installing software dependencies...
-	apt-get -y $INSTALL libbluetooth-dev bluez pi-bluetooth python-gobject python-gobject-2 bluez-tools sox crudini libsox-fmt-mp3 python-dbus bluealsa obexpushd libid3-dev unp
+	apt-get -y $INSTALL git libsndfile1-dev libbluetooth-dev bluez pi-bluetooth python-gobject python-gobject-2 bluez-tools sox crudini libsox-fmt-mp3 python-dbus bluealsa obexpushd libid3-dev unp
 	apt-get -y remove pulseaudio
-	
-	#Installing software needed to compile PiFmRDS..
-	apt-get -y $INSTALL git libsndfile1-dev
 fi
 
 INPUT="/etc/udev/rules.d/99-input.rules"
@@ -131,7 +133,7 @@ fi
 
 #Installing PiFmRDS...
 
-if [[ $remove ]]; then
+if [[ $remove || $CORE_INSTALL == "true" ]]; then
 	echo "not compiling before uninstall"
 else
 	cd /usr/local/src/
