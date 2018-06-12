@@ -62,6 +62,9 @@ put)
 
 	if [[ "$NAME" == "mpradio-master.zip" ]]
 	then
+		mount -o remount,rw /
+		mount -o remount,rw /boot
+		sudo umount -l /var/
 		cd mpradio-master/install
 		bash install.sh core;
 	fi
