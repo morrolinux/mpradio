@@ -1,7 +1,6 @@
 [Unit]
 Description=obex file transfer service
 After=simple-agent.service dbus-org.bluez.service
-Before=mpradio.service
 
 [Service]
 Type=simple
