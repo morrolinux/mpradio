@@ -72,18 +72,22 @@ use utility/roswitch.sh as follows:
 
 # Usage
 It (should) work out of the box. You need your mp3 files to be on a FAT32 USB stick (along with the `pirateradio.config` file if you want to override the default settings).
-You can **safely** shut down the Pi by unplugging the stick and waiting for about 5 seconds until the status LED stops blinking.
+You can **safely** shut down the Pi by holding the push button or via App, and waiting for about 5 seconds until the status LED stops blinking.
 If you enabled "persistentPlaylist" option, your Pi will never play the same song twice before consuming the full playlist.
-If you add new songs on the USB stick, with "persistentPlaylist" enabled they won't be played until the current playlist is consumed. You can "rebuild" the playlist (looking for new recently added files) if needed:
+This means if you add new songs on the USB stick, with "persistentPlaylist" enabled they won't be played until the current playlist is consumed. You can "rebuild" the playlist (looking for new recently added files) if needed:
+- Via App 
+
+or
+
 - Boot your Pi with USB stick unplugged. (The current playlist will be erased.)
-- Plug in your USB stick and unplug it again. (This will cause a shutdown.) 
-- Power on your Pi once again, with the USB key in it.
-- You're done! (`mpradio` will rebuild the playlist, counting the new files as well)
+- Safely shutdown your Pi 
+- Power on your Pi once again, with the USB stick in it.
+- You're done! (`mpradio` will rebuild the playlist, indexing the new files as well)
   
 Also, please remember that (though it would be probably illegal) you can test FM broadcasting by plugging a 20cm wire on the **GPIO 4** of your Pi.
 
 ## Control pipe
-You can perform certain operations while mpradio.service is running by simply writing to mpradio_ctl
+You can perform certain operations while `mpradio.service` is running by simply writing to `/home/pi/mpradio_ctl`
 
 Example:
 * Play a song on demand: `echo "PLAY /absolute/path/to/song.mp3" > mpradio_ctl`
