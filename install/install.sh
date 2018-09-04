@@ -108,7 +108,7 @@ if [[ $remove ]]; then
 	systemctl disable rfcomm
 fi
 
-#Installing service units, or uninstalling them.
+# Installing service units, or uninstalling them.
 handle ../install/need2recompile.service /etc/systemd/system/need2recompile.service
 handle ../install/mpradio-legacy-rds.service /etc/systemd/system/mpradio-legacy-rds.service
 handle ../install/bt-setup.service /etc/systemd/system/bt-setup.service
@@ -120,6 +120,11 @@ handle ../install/dbus-org.bluez.service /etc/systemd/system/dbus-org.bluez.serv
 handle ../install/file_storage.sh /bin/file_storage.sh
 handle ../install/rfcomm.service /etc/systemd/system/rfcomm.service
 
+# Override bluealsa.service's configuration to specify exactly how bluealsa should run
+# ... or repeal the override, if we are removing
+mkdir -p /etc/systemd/system/bluealsa.service.d/
+handle ../install/override.conf /etc/systemd/system/bluealsa.service.d/override.conf
+
 if [[ ! $remove ]]; then
 	systemctl enable mpradio.service
 	systemctl enable bluealsa.service
@@ -130,6 +135,7 @@ if [[ ! $remove ]]; then
 	systemctl enable mpradio-pushbutton-skip.service
 	systemctl enable obexpushd.service
 	systemctl enable rfcomm
+
 fi
 
 #Installing PiFmRDS...
