@@ -201,5 +201,7 @@ if [[ $(grep "gpu_freq=250" /boot/config.txt) == "" ]]; then
     echo "gpu_freq=250" >> /boot/config.txt	
 fi
 
+systemctl daemon-reload		#needed when changing systemd unit files
+
 echo "Completed! Rebooting in 5 seconds..."
 sleep 5 && reboot
