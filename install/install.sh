@@ -64,7 +64,7 @@ fi
 INPUT="/etc/udev/rules.d/99-input.rules"
 inputline=$(grep "bluetooth" "$INPUT" -n|cut -d: -f1)
 if [[ $inputline == "" ]]; then
-	echo "KERNEL==\"input[0-9]*\", RUN+=\"/usr/lib/udev/bluetooth\"" >> "$INPUT"
+	echo "ACTION==\"*\", SUBSYSTEM==\"bluetooth\", RUN+=\"/usr/lib/udev/bluetooth\"" >> "$INPUT"
 elif [[ $remove ]]; then
 	sed -i.bak -e "${inputline}d" "$INPUT"
 fi
