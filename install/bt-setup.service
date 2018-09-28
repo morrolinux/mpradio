@@ -2,12 +2,12 @@
 Description=mpradio bluetooth init script
 Requires=bluetooth.service bluealsa.service
 After=bluetooth.service sys-subsystem-bluetooth-devices-hci0.device   
-Before=mpradio.service
 
 [Service]
 Type=simple
 User=root
 Group=root
+ExecStartPre=/bin/sleep 10
 ExecStart=/bin/bash /bin/bt-setup.sh
 
 [Install]
