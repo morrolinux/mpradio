@@ -36,6 +36,11 @@ First make sure your Raspbian is up to date:
 
 ` cd mpradio-master/install && sudo ./install.sh`
 
+OR
+
+You can just download and flash a full raspbian-mpradio.img image from [here.](https://www.mediafire.com/folder/qn62j675htott/mpradio) 
+Be aware even the "latest" image could be "not so latest", but certainly will work. Just wait for it to reboot twice on first use.
+
 # Configuration
 By default, `mpradio` will always be running automatically after boot once installed. No additional configuration is needed.
 However, you can change the FM streaming frequency (which is otherwise defaulted to 107.0) by placing a file named pirateradio.config in the root of a USB key (which of course, will need to stay plugged for the settings to be permanent)
@@ -99,7 +104,7 @@ Example:
 
 I'll post the source code once it's mature enough, but you can test an alpha (0.2) version [here](http://www.mediafire.com/file/awu3r50z5gz3363/mpradio_remote-0.2.apk) 
 
-NB: I haven't handled all corner conditions yet, so crashes may occour.
+NB: I haven't handled all corner conditions yet, so crashes may occour. (Make sure your Bluetooth is on and your Pi is paired, before even starting the app) 
 
 Screenshots:
 
