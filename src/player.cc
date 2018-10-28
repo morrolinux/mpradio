@@ -155,7 +155,7 @@ int play_storage()
 
 			string trim=trim_audio_track(ps.songPath);
 
-			output=pifm1+" "+"\""+ps.songName+"\""+" "+pifm2+" "+"\""+ps.songName+"\""+" "+pifm3+" "+s.freq;
+			output=pifm1+" "+"\""+s.rdsStationName+"\""+" "+pifm2+" "+"\""+ps.songArtist+" - "+ps.songName+"\""+" "+pifm3+" "+s.freq;
 			set_output(output);			/**< change output device if specified */
 
 			string cmdline=trim+sox+" -t "+ps.fileFormat+sox_params+" | "+output;

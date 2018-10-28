@@ -19,6 +19,7 @@ struct settings{
 	string treble;
 	string storageGain;
 	string output;
+	string rdsStationName;
 	bool shuffle;
 	bool persistentPlaylist;
 	bool resumePlayback;
