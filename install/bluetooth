@@ -4,13 +4,13 @@ function log {
 	sudo echo "[$(date)]: $*" >> /var/log/bluetooth_dev
 }
 BTMAC=${NAME//\"/}
-if [ $ACTION = "remove" ]
+if [[ $ACTION == "remove" && $BTMAC != "" ]]
 then
         log "Stop Played Connection " $BTMAC
         sudo systemctl stop mpradio-bt@$BTMAC
 	killall mpradio && killall sox
         sudo systemctl start mpradio
-elif [ $ACTION = "add" ]
+elif [[ $ACTION == "add" && $BTMAC != "" ]]
 then
 	log "Start Played Connection " $BTMAC
 	sed -i "s/^defaults.bluealsa.device.*$/defaults.bluealsa.device \"$BTMAC\"/g" /home/pi/.asoundrc
@@ -20,4 +20,3 @@ then
 else
         log "Other action " $ACTION
 fi
-
