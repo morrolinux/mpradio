@@ -64,7 +64,7 @@ fi
 INPUT="/etc/udev/rules.d/99-input.rules"
 inputline=$(grep "bluetooth" "$INPUT" -n|cut -d: -f1)
 if [[ $inputline == "" ]]; then
-	echo "KERNEL=="input[0-9]*", RUN+=\"/usr/lib/udev/bluetooth\"" >> "$INPUT"
+	echo "SUBSYSTEM=="input", RUN+=\"/usr/lib/udev/bluetooth\"" >> "$INPUT"  # SUBSYSTEM=="input" gives the correct env with bluetooth mac address
 elif [[ $remove ]]; then
 	sed -i.bak -e "${inputline}d" "$INPUT"
 fi
