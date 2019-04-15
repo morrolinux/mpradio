@@ -1,7 +1,10 @@
 # mpradio
-Morrolinux's Pirate radio (PiFmRDS implementation with Bluetooth and mp3 support) for all Raspberry Pi models
+Morrolinux's Pirate radio (PiFmRDS implementation with Bluetooth and mp3 support) for all Raspberry Pi models.
+Exclusively tested on Minimal Raspbian (ARM).
 
-Exclusively tested on Minimal Raspbian (ARM)
+# Discontinued
+mpradio has been redesigned and wrote from scratch in python. We moved [here](https://github.com/morrolinux/mpradio-py)
+
 
 # Features
 - [x] Resume track from its playback status hh:mm:ss across reboots (CD-like expirience)
